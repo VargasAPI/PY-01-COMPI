@@ -1,0 +1,52 @@
+package PaserLexer;
+import java_cup.runtime.*;
+
+// utiliza class BasicLexerCup que genera el lexer .jflex, pequeños cambios de lo tomado de la página de cup
+//cambios en parser code, init with y scan with {:
+
+
+action code {:
+
+    public void hola(){
+        System.out.println("Hola");
+    }
+
+    public void adios(){
+        System.out.println("Adios");
+    }
+:}
+
+parser code {:
+    BasicLexerCup lex;
+    
+    @SuppressWarnings("deprecation")
+    public parser(BasicLexerCup lex){
+        this.lex=lex;
+        this.symbolFactory = new DefaultSymbolFactory();
+    }
+
+:}
+
+init with {: :};
+
+/* define how to connect to the scanner! */
+scan with {: return lex.next_token(); :}
+
+/* Terminales (tokens retornados por el scanner). */
+terminal INTEGER_T, STRING_T, CHAR_T, ASIGNA, COMPARACION, SUMA, FINLINEA, IDENTIFICADOR; /* Generales */
+
+terminal L_INTEGER, L_STRING;
+
+// no terminales 
+non terminal programa, lineas, linea, tipos, literal;
+
+//produccion de inicio
+start with programa;
+
+programa ::= {: hola();:} linea {: adios();:} ;
+tipos ::= INTEGER_T | STRING_T | CHAR_T ;
+literal ::= L_INTEGER | L_STRING ;
+lineas ::= linea ;
+lineas ::= lineas linea ;
+linea ::= tipos IDENTIFICADOR ASIGNA literal FINLINEA ;
+
