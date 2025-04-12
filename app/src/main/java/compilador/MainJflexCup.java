@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.io.Reader;
  
 import java_cup.internal_error;
-import java cup.parser;
-import java cup.runtime.Symbol;
+import java_cup.parser;
+import java_cup.runtime.Symbol;
 import jflex.exceptions.SilentExit;
  
- 
+import ParserLexer.*; 
+
 public class MainJflexCup {
     public void iniLexerParser(String rutaLexer, String rutaParser) throws internal_error ,Exception {
      

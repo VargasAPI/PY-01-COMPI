@@ -13,6 +13,10 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    // Repositorio para archivos locales
+    flatDir{
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -23,6 +27,12 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+
+    // Incluir los archivos JAR del directorio 'libs'
+    implementation name: 'java-cup-11b-runtime' // Sin la extension jar
+    implementation name: 'java-cup-11b' 
+    implementation name: 'jflex-full-1.9.1' 
+    
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
