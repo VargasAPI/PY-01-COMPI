@@ -18,50 +18,33 @@ public class App {
         // Genera el analizdor lexico y sintactico
 
         // verano 2024
-        fullPathLexer = basePath + "\\app\\src\\SI2025\\basicLexerCupSI2025.jflex";
-        fullPathparser = basePath + "\\app\\src\\SI2025\\parserSI2025Ini.cup";
+        fullPathLexer = basePath +"\\app\\src\\SI2025\\basicLexerCupSI2025.jflex";
+        fullPathparser = basePath +"\\app\\src\\SI2025\\parserSI2025Ini.cup";
         // .java de parser y lexer
         // verano 2024
         jparser = "parser.java";
         jlexer = "BasicLexerCup.java";
         jlexerCarpeta = "SI2025";
         // elimina los archivos
-        Files.deleteIfExists(Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\sym.java"));
-        //Files.deleteIfExists(Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jparser));
-        //Files.deleteIfExists(Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jlexer));
+        Files.deleteIfExists(Paths.get(basePath +"\\app\\src\\main\\java\\ParserLexer\\sym.java"));
+        Files.deleteIfExists(Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jparser));
+        Files.deleteIfExists(Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jlexer));
 
         // Crear analizador lexico y sintactico
         // String[] args = {fullPathparser};\\flag para el nombre del parser
         mfjc.iniLexerParser(fullPathLexer, fullPathparser);
         // mover los archivos
-        //Files.move(Paths.get(basePath + "\\sym.java"),Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\sym.java"));
-        //Files.move(Paths.get(basePath + "\\" + jparser),Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jparser));
-        Files.move(Paths.get(basePath + "\\app\\src" + jlexerCarpeta + "\\" + jlexer),Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jlexer));
+        Files.move(
+            Paths.get(basePath + "\\sym.java"),
+            Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\sym.java")
+        );
+        Files.move(
+            Paths.get(basePath + "\\" + jparser),
+            Paths.get(basePath + "\\app\\src\\main\\java\\ParserLexer\\" + jparser)
+        );
+        Files.move(Paths.get(basePath+"\\app\\src\\"+jlexerCarpeta+"\\"+jlexer), Paths.get(basePath+"\\app\\src\\main\\java\\ParserLexer\\"+jlexer));
     }
 
-    public static void PruebasLexerParser() throws Exception {
-        String basePath, fullPathScanner, fullPathparser, fullPathParserII2024, fullPathParserV2024;
-        MainJflexCup mfjc;
-
-        basePath = System.getProperty("user.dir");
-
-        basePath = System.getProperty("user.dir");
-        fullPathScanner = basePath + "\\app\\src\\codigoPrueba\\ejemplo1.txt";
-        fullPathparser = basePath + "\\app\\src\\codigoPrueba\\ejemploParser.txt";
-        fullPathParserII2024 = basePath + "\\app\\src\\codigoPrueba\\ejemploParserII2024.txt";
-
-        fullPathParserV2024 = basePath + "\\app\\src\\codigoPrueba\\ejemploParserII2024.txt";
-
-        mfjc = new MainJflexCup();
-
-        // ejercicio de prueba de scanner
-
-        // mfjc.ejercicioLexerV2024(fullPathParserV2024); //Prueba el lexer cup ajustado
-        // V 2024
-
-        mfjc.ejercicioParser(fullPathparser); //Pueba el parser de verano 2024
-
-    }
 
     public String getGreeting() {
         return "Hello, World!";
