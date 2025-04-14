@@ -1,4 +1,4 @@
-package PaserLexer;
+package ParserLexer;
 import java_cup.runtime.*;
 
 // utiliza class BasicLexerCup que genera el lexer .jflex, pequeños cambios de lo tomado de la página de cup

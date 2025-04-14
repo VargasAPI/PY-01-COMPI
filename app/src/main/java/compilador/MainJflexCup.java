@@ -35,7 +35,7 @@ public class MainJflexCup {
     //Esta usa el lexer modificado el de ParserLexer de verano 2024
     //Usa simbol de cup
     public void ejercicioLexer(String rutaScanner) throws IOException {
-        /*Reader reader = new BufferedReader(new FileReader(rutaScanner));
+        Reader reader = new BufferedReader(new FileReader(rutaScanner));
         reader.read();
         BasicLexerCup lex = new BasicLexerCup(reader);
         int i = 0;
@@ -44,27 +44,27 @@ public class MainJflexCup {
         {
             token = lex.next_token();
             if(token.sym != 0){
-                System.out.println("Token: " + token.sym+", Valor: "+(token.value==null?lex.yytext(): token.value.toString()));
+                System.out.println("Token: " + token.sym+", Valor: "+(token.value==null?lex.yytext():token.value.toString()));
             }else{
                 System.out.println("Cantidad de lexemas encontrados: " +i);
                 return;
             }
             i++;
-        }*/
+        }
  
     }
  
- 
+    
  
  
     //Uso del parser y de parser_extended
     public void ejercicioParser(String rutaparsear) throws Exception {
-        /*Reader reader = new BufferedReader(new FileReader(rutaparsear));
+        Reader reader = new BufferedReader(new FileReader(rutaparsear));
         reader.read();
         BasicLexerCup myLexer = new BasicLexerCup(reader);
  
-        ParsearLexer.parser myParser = new ParsearLexer.parser(myLexer);
-        myParser.parse();*/
+        ParserLexer.parser myParser = new ParserLexer.parser(myLexer);
+        myParser.parse();
     }
  
 }

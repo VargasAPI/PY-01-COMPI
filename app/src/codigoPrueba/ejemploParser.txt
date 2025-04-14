@@ -1,0 +1,2 @@
+ int hola = 23 ?
+char mivar = "ssff" ?

@@ -1,5 +1,5 @@
 /* JFlex example: partial Java language lexer specification */
-package PaserLexer;
+package ParserLexer;
 import java_cup.runtime.*;
 
 /**
