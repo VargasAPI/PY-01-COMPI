@@ -1,48 +1,58 @@
 package ParserLexer;
 import java_cup.runtime.*;
-
+ 
 // utiliza class BasicLexerCup que genera el lexer .jflex, pequeños cambios de lo tomado de la página de cup
 //cambios en parser code, init with y scan with {:
 // este es el cup este es el analinzador lexico
 // meter funciones en action code para la tabla de simbolos, agregar un simbolo a una tabla, generar un simbolo
 // funciones java en action code
 action code {:
-
+ 
     public void hola(){
         System.out.println("Hola");
     }
-
+ 
     public void adios(){
         System.out.println("Adios");
     }
 :}
-
+ 
 parser code {:
     BasicLexerCup lex;
-    
+   
     @SuppressWarnings("deprecation")
     public parser(BasicLexerCup lex){
         this.lex=lex;
         this.symbolFactory = new DefaultSymbolFactory();
     }
-
+ 
 :}
-
+ 
 init with {: :};
-
+ 
 /* define how to connect to the scanner! */
 scan with {: return lex.next_token(); :}
-
+ 
 /* Terminales (tokens retornados por el scanner). */
-terminal INTEGER_T, STRING_T, CHAR_T, ASIGNA, COMPARACION, SUMA, FINLINEA, IDENTIFICADOR; /* Generales */
-
+terminal INTEGER_T, STRING_T, FLOAT_T, FALSE_T, TRUE_T;
+terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, COMPARACION_T;
+terminal DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T,MAS_IGUAL_T, MENOS_IGUAL_T;
+terminal ASIGNA_T, DIV_IGUAL_T, NO_IGUAL_T, INCREMENTO_T, DECREMENTO_T;
+terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T;  ////borre de aqui pa arriba
+terminal IF_T, ELSE_T,  DO_T, ELIF_T, WHILE_T, FOR_T, VOID_T, FINLINEA_T;
+terminal RETURN_T,BREAK_T, COMA_T, CIN_T, COUT_T, COUT_COMENT_T;
+terminal CIN_COMENT_T,LLAVE_ABIERTO_T,LLAVE_CERRADO_T, PARENTESISAC_T;
+terminal CHAR_T, COMPARACION, SUMA, FINLINEA, IDENTIFICADOR; /* Generales */
+ 
 terminal L_INTEGER, L_STRING;
-
-// no terminales 
+ 
+// no terminales
 non terminal programa, lineas, linea, tipos, literal;
-
+ 
 //produccion de inicio
 start with programa;
+ 
+
 
 
 programa ::= {: hola();:} lineas {: adios();:} ;
@@ -50,4 +60,4 @@ tipos ::= INTEGER_T | STRING_T | CHAR_T ;
 literal ::= L_INTEGER | L_STRING ;
 lineas ::= linea ;
 lineas ::= lineas linea ;
-linea ::= tipos IDENTIFICADOR ASIGNA literal FINLINEA ;
+linea ::= tipos IDENTIFICADOR ASIGNA_T literal FINLINEA ;
