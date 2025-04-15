@@ -42,29 +42,34 @@ Identifier = [:jletter:] [:jletterdigit:]*
 digito = [0-9]
 digitoNocero = [1-9]
  
-EnteroValido = "0" | "-"? {digito} {digitoNocero}*
-FlotanteValido = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}+) //3.14, -10.5, 123.456 y 0.124, 0.0, 0.1
- 
+Entero = "0" | "-"? {digito} {digitoNocero}*
+Flotante = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}+) //3.14, -10.5, 123.456 y 0.124, 0.0, 0.1
+
+Caracter = \'(\\.|[^\\'])\'
+
 %state STRING
  
 %%
  
+
 /* keywords */
 //Tipos USAMOS T por Tokens
 <YYINITIAL> "int"           { return symbol(sym.INTEGER_T); }
 <YYINITIAL> "string"            { return symbol(sym.STRING_T); }
 <YYINITIAL> "char"              { return symbol(sym.CHAR_T); }
 <YYINITIAL> "float"            { return symbol(sym.FLOAT_T); }
-<YYINITIAL> "sol"           { return symbol(sym.FALSE_T); }
-<YYINITIAL> "luna"            { return symbol(sym.TRUE_T); }
+<YYINITIAL> "bool"            { return symbol(sym.BOLEANO_T); }
+<YYINITIAL> "Sol"           { return symbol(sym.FALSE_T); }
+<YYINITIAL> "Luna"            { return symbol(sym.TRUE_T); }
 //----------------------------------------------------------------
  
 //Signos
 <YYINITIAL> "+"              { return symbol(sym.SUMA_T); }
 <YYINITIAL> "-"             { return symbol(sym.RESTA_T); }
 <YYINITIAL> "*"             { return symbol(sym.MULTIPLICACION_T); }
-<YYINITIAL> ""             { return symbol(sym.POTENCIA_T); }
+<YYINITIAL> "**"             { return symbol(sym.POTENCIA_T); }
 <YYINITIAL> "//"             { return symbol(sym.DIVISION_T); }
+<YYINITIAL> "~"             { return symbol(sym.MODULO_T); }
  
 //operadorRelacional
 <YYINITIAL> "=="            { return symbol(sym.COMPARACION_T); }
@@ -119,9 +124,11 @@ FlotanteValido = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}
    
                       //return symbol: Es el id con el cual se reconoce el token que genera: ejem 25 -> lo reconoce el programa como un token llamado l-integer
     /* literals */  
-    {EnteroValido}    { return symbol(sym.L_INTEGER, new Integer(yytext())); }
+    {Entero}                        { return symbol(sym.L_INTEGER, yytext()); }
     /* literals */  
-    {FlotanteValido}  { return symbol(sym.L_FLOAT, new Float(yytext())); }
+    {Flotante}                      { return symbol(sym.L_FLOAT, yytext()); }
+
+    {Caracter}                      { return symbol(sym.L_CHAR, yytext()); }
  
  
  
@@ -150,7 +157,7 @@ FlotanteValido = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}
  
 /* error fallback - manejo no intrusivo de errores */
 [^] {
-    System.err.println("Error léxico: Carácter ilegal '" + yytext() +
-                      "' en línea " + yyline + ", columna " + yycolumn);
+    System.err.println("Error léxico: Carácter ilegal <" + yytext() +
+                      "> en línea " + yyline + ", columna " + yycolumn);
     // Continúa el análisis sin lanzar excepción
 }

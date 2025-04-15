@@ -1,2 +1,7 @@
- int hola = 23 ?
+ int hola = 23.5 ?
 char mivar = "ssff" ?
+int num = '-2' ? 
+int num2 = 2 ? 
+int num1 = 'a'?
+bool verdad = Sol ?
+int num?

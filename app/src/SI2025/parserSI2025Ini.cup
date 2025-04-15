@@ -34,20 +34,21 @@ init with {: :};
 scan with {: return lex.next_token(); :}
  
 /* Terminales (tokens retornados por el scanner). */
-terminal INTEGER_T, STRING_T, FLOAT_T, FALSE_T, TRUE_T;
-terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, COMPARACION_T;
-terminal DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T,MAS_IGUAL_T, MENOS_IGUAL_T;
+terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T;  /*tipos*/
+terminal FALSE_T, TRUE_T;   /*boleano*/
+terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, MODULO_T; /*signo*/
+terminal COMPARACION_T, DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T,MAS_IGUAL_T, MENOS_IGUAL_T; /*operadorRelacional*/
 terminal ASIGNA_T, DIV_IGUAL_T, NO_IGUAL_T, INCREMENTO_T, DECREMENTO_T;
-terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T;  ////borre de aqui pa arriba
+terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T;  
 terminal IF_T, ELSE_T,  DO_T, ELIF_T, WHILE_T, FOR_T, VOID_T, FINLINEA_T;
 terminal RETURN_T,BREAK_T, COMA_T, CIN_T, COUT_T, COUT_COMENT_T;
 terminal CIN_COMENT_T,LLAVE_ABIERTO_T,LLAVE_CERRADO_T, PARENTESISAC_T;
-terminal CHAR_T, COMPARACION, SUMA, FINLINEA, IDENTIFICADOR; /* Generales */
+
  
-terminal L_INTEGER, L_STRING;
+terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR;
  
 // no terminales
-non terminal programa, lineas, linea, tipos, literal;
+non terminal programa, lineas, linea, tipos, literal, boleano;
  
 //produccion de inicio
 start with programa;
@@ -56,8 +57,9 @@ start with programa;
 
 
 programa ::= {: hola();:} lineas {: adios();:} ;
-tipos ::= INTEGER_T | STRING_T | CHAR_T ;
-literal ::= L_INTEGER | L_STRING ;
+tipos ::= INTEGER_T | STRING_T | CHAR_T | BOLEANO_T;
+literal ::= L_INTEGER | L_STRING | L_FLOAT | L_CHAR | boleano;
+boleano ::= FALSE_T | TRUE_T;
 lineas ::= linea ;
 lineas ::= lineas linea ;
-linea ::= tipos IDENTIFICADOR ASIGNA_T literal FINLINEA ;
+linea ::= tipos IDENTIFICADOR ASIGNA_T literal FINLINEA_T ;

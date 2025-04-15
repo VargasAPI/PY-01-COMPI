@@ -8,31 +8,115 @@ package ParserLexer;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int COMPARACION = 6;
-  public static final int INTEGER_T = 2;
-  public static final int SUMA = 7;
+  public static final int L_FLOAT = 52;
+  public static final int L_STRING = 50;
+  public static final int FALSE_T = 7;
+  public static final int COMA_T = 41;
+  public static final int COMPARACION_T = 15;
+  public static final int FINLINEA_T = 38;
+  public static final int ASIGNA_T = 23;
+  public static final int DIFERENTE_T = 16;
+  public static final int RESTA_T = 10;
   public static final int CHAR_T = 4;
-  public static final int L_STRING = 11;
+  public static final int MAYOR_IGUAL_T = 17;
+  public static final int LLAVE_CERRADO_T = 47;
+  public static final int COUT_T = 43;
+  public static final int MODULO_T = 14;
+  public static final int COUT_COMENT_T = 44;
+  public static final int CONJUNCION_T = 28;
+  public static final int BOLEANO_T = 6;
+  public static final int IDENTIFICADOR = 51;
+  public static final int L_CHAR = 53;
+  public static final int LLAVE_ABIERTO_T = 46;
+  public static final int CIN_COMENT_T = 45;
+  public static final int MAYOR_T = 19;
+  public static final int RETURN_T = 39;
+  public static final int NEGACION_T = 29;
+  public static final int POTENCIA_T = 12;
+  public static final int MENOR_T = 20;
+  public static final int DIV_IGUAL_T = 24;
   public static final int EOF = 0;
-  public static final int FINLINEA = 8;
+  public static final int MAS_IGUAL_T = 21;
+  public static final int DIVISION_T = 13;
+  public static final int INCREMENTO_T = 26;
   public static final int error = 1;
-  public static final int L_INTEGER = 10;
+  public static final int INTEGER_T = 2;
+  public static final int MENOR_IGUAL_T = 18;
+  public static final int DISYUNCION_T = 30;
+  public static final int WHILE_T = 35;
+  public static final int CIN_T = 42;
+  public static final int BREAK_T = 40;
+  public static final int ELIF_T = 34;
+  public static final int SUMA_T = 9;
+  public static final int PARENTESISAC_T = 48;
+  public static final int FLOAT_T = 5;
+  public static final int NO_IGUAL_T = 25;
+  public static final int DO_T = 33;
+  public static final int FOR_T = 36;
+  public static final int DECREMENTO_T = 27;
+  public static final int TRUE_T = 8;
   public static final int STRING_T = 3;
-  public static final int IDENTIFICADOR = 9;
-  public static final int ASIGNA = 5;
+  public static final int MENOS_IGUAL_T = 22;
+  public static final int MULTIPLICACION_T = 11;
+  public static final int VOID_T = 37;
+  public static final int IF_T = 31;
+  public static final int L_INTEGER = 49;
+  public static final int ELSE_T = 32;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "INTEGER_T",
   "STRING_T",
   "CHAR_T",
-  "ASIGNA",
-  "COMPARACION",
-  "SUMA",
-  "FINLINEA",
-  "IDENTIFICADOR",
+  "FLOAT_T",
+  "BOLEANO_T",
+  "FALSE_T",
+  "TRUE_T",
+  "SUMA_T",
+  "RESTA_T",
+  "MULTIPLICACION_T",
+  "POTENCIA_T",
+  "DIVISION_T",
+  "MODULO_T",
+  "COMPARACION_T",
+  "DIFERENTE_T",
+  "MAYOR_IGUAL_T",
+  "MENOR_IGUAL_T",
+  "MAYOR_T",
+  "MENOR_T",
+  "MAS_IGUAL_T",
+  "MENOS_IGUAL_T",
+  "ASIGNA_T",
+  "DIV_IGUAL_T",
+  "NO_IGUAL_T",
+  "INCREMENTO_T",
+  "DECREMENTO_T",
+  "CONJUNCION_T",
+  "NEGACION_T",
+  "DISYUNCION_T",
+  "IF_T",
+  "ELSE_T",
+  "DO_T",
+  "ELIF_T",
+  "WHILE_T",
+  "FOR_T",
+  "VOID_T",
+  "FINLINEA_T",
+  "RETURN_T",
+  "BREAK_T",
+  "COMA_T",
+  "CIN_T",
+  "COUT_T",
+  "COUT_COMENT_T",
+  "CIN_COMENT_T",
+  "LLAVE_ABIERTO_T",
+  "LLAVE_CERRADO_T",
+  "PARENTESISAC_T",
   "L_INTEGER",
-  "L_STRING"
+  "L_STRING",
+  "IDENTIFICADOR",
+  "L_FLOAT",
+  "L_CHAR"
   };
 }
 
