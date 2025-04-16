@@ -44,17 +44,18 @@ digitoNocero = [1-9]
  
 Entero = "0" | "-"? {digito} {digitoNocero}*
 Flotante = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}+) //3.14, -10.5, 123.456 y 0.124, 0.0, 0.1
-
+ 
 Caracter = \'(\\.|[^\\'])\'
-
+ 
 %state STRING
  
 %%
  
-
+ 
 /* keywords */
 //Tipos USAMOS T por Tokens
 <YYINITIAL> "int"           { return symbol(sym.INTEGER_T); }
+<YYINITIAL> "void"             { return symbol(sym.VOID_T); }
 <YYINITIAL> "string"            { return symbol(sym.STRING_T); }
 <YYINITIAL> "char"              { return symbol(sym.CHAR_T); }
 <YYINITIAL> "float"            { return symbol(sym.FLOAT_T); }
@@ -82,9 +83,10 @@ Caracter = \'(\\.|[^\\'])\'
 //signoComparacion
 <YYINITIAL> "+="             { return symbol(sym.MAS_IGUAL_T); }
 <YYINITIAL> "-="             { return symbol(sym.MENOS_IGUAL_T); }
-<YYINITIAL> "="             { return symbol(sym.ASIGNA_T); }
+<YYINITIAL> "="             { return symbol(sym.ASIGNA); }
 <YYINITIAL> "//="             { return symbol(sym.DIV_IGUAL_T); }
-<YYINITIAL> "~="             { return symbol(sym.NO_IGUAL_T); }
+<YYINITIAL> "~="             { return symbol(sym.MOD_IGUAL_T); }
+<YYINITIAL> "**="             { return symbol(sym.POT_IGUAL_T); }
 //----------------------------------------------------------------
 //Incremento y decremento
 <YYINITIAL> "++"            { return symbol(sym.INCREMENTO_T); }
@@ -102,19 +104,21 @@ Caracter = \'(\\.|[^\\'])\'
 <YYINITIAL> "elif"              { return symbol(sym.ELIF_T); }
 <YYINITIAL> "while"           { return symbol(sym.WHILE_T); }
 <YYINITIAL> "for"             { return symbol(sym.FOR_T); }
-<YYINITIAL> "void"             { return symbol(sym.VOID_T); }
-<YYINITIAL> "?"              { return symbol(sym.FINLINEA_T); }
+ 
+<YYINITIAL> "?"              { return symbol(sym.FINLINEA); }
 <YYINITIAL> "return"          { return symbol(sym.RETURN_T); }
 <YYINITIAL> "break"           { return symbol(sym.BREAK_T); }
 <YYINITIAL> ","              { return symbol(sym.COMA_T); }
 <YYINITIAL> "cin"              { return symbol(sym.CIN_T); }
 <YYINITIAL> "cout"              { return symbol(sym.COUT_T); }
-<YYINITIAL> ">>"              { return symbol(sym.COUT_COMENT_T); }
-<YYINITIAL> "<<"              { return symbol(sym.CIN_COMENT_T); }
-<YYINITIAL> "{"             { return symbol(sym.LLAVE_ABIERTO_T); }
+<YYINITIAL> ">>"              { return symbol(sym.OP_INSERT_T); }
+<YYINITIAL> "<<"              { return symbol(sym.OP_EXTRACT_T); }
+<YYINITIAL> "{"             { return symbol(sym.LLAVE_ABIERTO_T); }//Cambiar por /\
 <YYINITIAL> "}"              { return symbol(sym.LLAVE_CERRADO_T); }
-<YYINITIAL> "&"              { return symbol(sym.PARENTESISAC_T); }
- 
+<YYINITIAL> "&"              { return symbol(sym.PARENTESIS_T); }
+<YYINITIAL> "|"              { return symbol(sym.PIPE); }
+<YYINITIAL> "["              { return symbol(sym.CORCHETE_I); }
+<YYINITIAL> "]"              { return symbol(sym.CORCHETE_D); }
  
  
  
@@ -127,7 +131,7 @@ Caracter = \'(\\.|[^\\'])\'
     {Entero}                        { return symbol(sym.L_INTEGER, yytext()); }
     /* literals */  
     {Flotante}                      { return symbol(sym.L_FLOAT, yytext()); }
-
+ 
     {Caracter}                      { return symbol(sym.L_CHAR, yytext()); }
  
  
@@ -161,3 +165,4 @@ Caracter = \'(\\.|[^\\'])\'
                       "> en línea " + yyline + ", columna " + yycolumn);
     // Continúa el análisis sin lanzar excepción
 }
+ 

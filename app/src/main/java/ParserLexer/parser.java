@@ -31,12 +31,12 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\021\000\002\002\004\000\002\010\002\000\002\002" +
+    "\000\022\000\002\002\004\000\002\010\002\000\002\002" +
     "\004\000\002\005\003\000\002\005\003\000\002\005\003" +
-    "\000\002\005\003\000\002\006\003\000\002\006\003\000" +
+    "\000\002\005\003\000\002\005\003\000\002\006\003\000" +
     "\002\006\003\000\002\006\003\000\002\006\003\000\002" +
-    "\007\003\000\002\007\003\000\002\003\003\000\002\003" +
-    "\004\000\002\004\007" });
+    "\006\003\000\002\007\003\000\002\007\003\000\002\003" +
+    "\003\000\002\003\004\000\002\004\007" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -44,21 +44,23 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\027\000\012\004\000\005\000\006\000\010\000\001" +
-    "\002\000\004\002\031\001\002\000\012\004\014\005\013" +
-    "\006\007\010\010\001\002\000\014\002\uffff\004\014\005" +
-    "\013\006\007\010\010\001\002\000\004\065\ufffc\001\002" +
-    "\000\004\065\ufffb\001\002\000\004\065\015\001\002\000" +
-    "\014\002\ufff3\004\ufff3\005\ufff3\006\ufff3\010\ufff3\001\002" +
-    "\000\004\065\ufffd\001\002\000\004\065\ufffe\001\002\000" +
-    "\004\031\016\001\002\000\016\011\022\012\024\063\017" +
-    "\064\020\066\025\067\026\001\002\000\004\050\ufffa\001" +
-    "\002\000\004\050\ufff9\001\002\000\004\050\ufff6\001\002" +
-    "\000\004\050\ufff5\001\002\000\004\050\027\001\002\000" +
-    "\004\050\ufff4\001\002\000\004\050\ufff8\001\002\000\004" +
-    "\050\ufff7\001\002\000\014\002\ufff1\004\ufff1\005\ufff1\006" +
-    "\ufff1\010\ufff1\001\002\000\014\002\ufff2\004\ufff2\005\ufff2" +
-    "\006\ufff2\010\ufff2\001\002\000\004\002\001\001\002" });
+    "\000\030\000\014\004\000\005\000\006\000\007\000\010" +
+    "\000\001\002\000\004\002\032\001\002\000\014\004\015" +
+    "\005\014\006\007\007\011\010\010\001\002\000\016\002" +
+    "\uffff\004\015\005\014\006\007\007\011\010\010\001\002" +
+    "\000\004\065\ufffc\001\002\000\004\065\ufffb\001\002\000" +
+    "\004\065\ufffa\001\002\000\004\065\016\001\002\000\016" +
+    "\002\ufff2\004\ufff2\005\ufff2\006\ufff2\007\ufff2\010\ufff2\001" +
+    "\002\000\004\065\ufffd\001\002\000\004\065\ufffe\001\002" +
+    "\000\004\031\017\001\002\000\016\011\023\012\025\063" +
+    "\021\064\020\066\026\067\027\001\002\000\004\050\ufff8" +
+    "\001\002\000\004\050\ufff9\001\002\000\004\050\ufff5\001" +
+    "\002\000\004\050\ufff4\001\002\000\004\050\030\001\002" +
+    "\000\004\050\ufff3\001\002\000\004\050\ufff7\001\002\000" +
+    "\004\050\ufff6\001\002\000\016\002\ufff0\004\ufff0\005\ufff0" +
+    "\006\ufff0\007\ufff0\010\ufff0\001\002\000\016\002\ufff1\004" +
+    "\ufff1\005\ufff1\006\ufff1\007\ufff1\010\ufff1\001\002\000\004" +
+    "\002\001\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -66,15 +68,15 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\027\000\006\002\003\010\004\001\001\000\002\001" +
-    "\001\000\010\003\005\004\011\005\010\001\001\000\006" +
-    "\004\027\005\010\001\001\000\002\001\001\000\002\001" +
+    "\000\030\000\006\002\003\010\004\001\001\000\002\001" +
+    "\001\000\010\003\005\004\012\005\011\001\001\000\006" +
+    "\004\030\005\011\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\006\006\022\007" +
-    "\020\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\006\006\023\007\021\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -242,7 +244,16 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // literal ::= L_INTEGER 
+          case 7: // tipos ::= FLOAT_T 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("tipos",3, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // literal ::= L_INTEGER 
             {
               Object RESULT =null;
 
@@ -251,7 +262,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // literal ::= L_STRING 
+          case 9: // literal ::= L_STRING 
             {
               Object RESULT =null;
 
@@ -260,7 +271,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // literal ::= L_FLOAT 
+          case 10: // literal ::= L_FLOAT 
             {
               Object RESULT =null;
 
@@ -269,7 +280,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // literal ::= L_CHAR 
+          case 11: // literal ::= L_CHAR 
             {
               Object RESULT =null;
 
@@ -278,7 +289,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // literal ::= boleano 
+          case 12: // literal ::= boleano 
             {
               Object RESULT =null;
 
@@ -287,7 +298,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // boleano ::= FALSE_T 
+          case 13: // boleano ::= FALSE_T 
             {
               Object RESULT =null;
 
@@ -296,7 +307,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // boleano ::= TRUE_T 
+          case 14: // boleano ::= TRUE_T 
             {
               Object RESULT =null;
 
@@ -305,7 +316,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // lineas ::= linea 
+          case 15: // lineas ::= linea 
             {
               Object RESULT =null;
 
@@ -314,7 +325,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // lineas ::= lineas linea 
+          case 16: // lineas ::= lineas linea 
             {
               Object RESULT =null;
 
@@ -323,7 +334,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // linea ::= tipos IDENTIFICADOR ASIGNA_T literal FINLINEA_T 
+          case 17: // linea ::= tipos IDENTIFICADOR ASIGNA_T literal FINLINEA_T 
             {
               Object RESULT =null;
 

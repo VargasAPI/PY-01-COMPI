@@ -1,7 +1,2 @@
- int hola = 23.5 ?
-char mivar = "ssff" ?
-int num = '-2' ? 
-int num2 = 2 ? 
-int num1 = 'a'?
-bool verdad = Sol ?
-int num?
+ int num = 32 + x ?
+ int x = 0 ?
