@@ -6,34 +6,14 @@ import java_cup.runtime.*;
 // este es el cup este es el analinzador lexico
 // meter funciones en action code para la tabla de simbolos, agregar un simbolo a una tabla, generar un simbolo
 // funciones java en action code
-
-
-
-
-
-
-
-
-//----------------Asignaciones para las producciones--------------------------------
-/**
-    
-    
-  
-    
-**/
-
-
-
-
-
 action code {:
  
     public void hola(){
-        System.out.println("Hola");
+        System.out.println("Iniciando lectura del codigo....");
     }
  
     public void adios(){
-        System.out.println("Adios");
+        System.out.println("Lectura finalizada de manera exitosa");
     }
 :}
  
@@ -54,79 +34,142 @@ init with {: :};
 scan with {: return lex.next_token(); :}
  
 /* Terminales (tokens retornados por el scanner). */
-terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T;  /*tipos*/
-terminal FALSE_T, TRUE_T;   /*boleano*/
-terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, MODULO_T; /*signo*/
-terminal COMPARACION_T, DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T,MAS_IGUAL_T, MENOS_IGUAL_T; /*operadorRelacional*/
-terminal ASIGNA, DIV_IGUAL_T, NO_IGUAL_T, INCREMENTO_T, DECREMENTO_T;
-terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T;  
-terminal IF_T, ELSE_T,  DO_T, ELIF_T, WHILE_T, FOR_T, VOID_T, FINLINEA_T;
-terminal RETURN_T,BREAK_T, COMA_T, CIN_T, COUT_T, COUT_COMENT_T;
-terminal CIN_COMENT_T,LLAVE_ABIERTO_T,LLAVE_CERRADO_T, PARENTESISAC_T;
-
- 
+/*definicion de tipos*/
 terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR;
- 
+ /*tipos*/
+terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T, VOID_T; 
+/*boleano*/
+terminal FALSE_T, TRUE_T;   
+/*signo*/
+terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, MODULO_T;
+/*operadores relacionales*/ 
+terminal COMPARACION_T, DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T;
+/*signos de comparacion*/
+terminal MAS_IGUAL_T, MENOS_IGUAL_T, ASIGNA, DIV_IGUAL_T, MOD_IGUAL_T, POT_IGUAL_T;
+/*signos unitarios*/
+terminal INCREMENTO_T, DECREMENTO_T;
+/*operadores logaritmicos y negacion*/
+terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T; 
+/*estructuras de control*/ 
+terminal IF_T, ELSE_T,  DO_T, ELIF_T, WHILE_T, FOR_T;
+/*sentencias de control*/
+terminal RETURN_T,BREAK_T, CIN_T, COUT_T;
+/*OTROS SIGNOS*/
+terminal OP_INSERT_T, OP_EXTRACT_T;
+terminal FINLINEA, COMA, PARENTESIS, LLAVE_ABIERTO_T, LLAVE_CERRADO_T;
+terminal PIPE, CORCHETE_D, CORCHETE_I;
 // no terminales
-non terminal programa, lineas, linea, tipos, literal, boleano;
- 
+non terminal programa, bloque, expr, operandos,tipo;
+non terminal signo, signoComp, operadorRel, operadorLog, tipoFunc, boleano;
+non terminal sigUnitario, operadorUnitario;
+
+
+non terminal arrays, creacionArray, asignArray, creacionAsigArray, array, defArray, cajaArray;
+non terminal contenido_simple, contenido_multiple, matriz_simple, matriz;
+non terminal filas, fila, columnas, columna;
+
+
+non terminal asignacion, creacion, asignArit, creacionAsig, asigCompuesta, operacionArit;
+
+non terminal exprRel_I, operandoLog, exprLog_I,exprUni ;
+non terminal lista_read, lista_write, read, write, return_A;
 //produccion de inicio
 start with programa;
+
+programa ::= {: hola();:} bloque {: adios();:} ;
+
+
  
 
+signo ::= SUMA_T | RESTA_T | MULTIPLICACION_T | POTENCIA_T | DIVISION_T | MODULO_T ;
+/*signoComp ::= += , -= , //= , ~= , **=   */
+signoComp ::= MAS_IGUAL_T | MENOS_IGUAL_T |  DIV_IGUAL_T | MOD_IGUAL_T | POT_IGUAL_T ;
+operadorRel ::= COMPARACION_T | DIFERENTE_T | MAYOR_IGUAL_T | MENOR_IGUAL_T | MAYOR_T | MENOR_T;
+operadorLog ::= CONJUNCION_T | DISYUNCION_T;
 
-
-programa ::= {: hola();:} lineas {: adios();:} ;
-tipos ::= INTEGER_T | STRING_T | CHAR_T | BOLEANO_T | FLOAT_T ;
-literal ::= L_INTEGER | L_STRING | L_FLOAT | L_CHAR | boleano;
+tipoFunc ::= INTEGER_T | VOID_T | FLOAT_T | CHAR_T | BOLEANO_T; 
 boleano ::= FALSE_T | TRUE_T;
-lineas ::= linea ;
-lineas ::= lineas linea ;
-linea ::= tipos IDENTIFICADOR ASIGNA literal FINLINEA_T ;
+sigUnitario ::= INCREMENTO_T | DECREMENTO_T;
+operadorUnitario ::= L_INTEGER sigUnitario | sigUnitario L_INTEGER ;
 
 
-// asignArit::= IDENTIFICADOR ASIGNA_T operacionArit ;
+arrays ::= creacionArray | asignArray | creacionAsigArray | array;
+creacionArray ::= tipo  IDENTIFICADOR defArray;
+asignArray ::=  IDENTIFICADOR defArray ASIGNA matriz ;
+creacionAsigArray ::= tipo IDENTIFICADOR defArray ASIGNA matriz ;
+
+/*a[2][fun(1)]*/
+array ::= IDENTIFICADOR defArray ;
+defArray ::= cajaArray  | defArray cajaArray;
+cajaArray ::= CORCHETE_I operandos CORCHETE_D ;
 
 
-// operacionArit::= operandos (signo operandos)*;
+contenido_simple ::=  PIPE operandos PIPE | operandos ;
+//contenido_multiple ::=  (contenido_simple COMA)* contenido_simple ;
 
-//----------------------Creacion, asignacion y creación-asignacion----------------
-asignacion::= creacion | asignaci
-creacion::= tipos IDENTIFICADOR
+contenido_multiple ::=  contenido_simple | contenido_multiple filas ;
+filas ::= fila | filas fila;
+fila ::= COMA contenido_simple;
 
-
-
-
-//-------------------------------------------------------------------------------
-
-//-------------------------Tipos---------------------------------------------------
-opRead::= L_INTEGER | L_FLOAT ;
-opWrite::= L_INTEGER | L_FLOAT | BOLEANO_T | IDENTIFICADOR ; //FALTA CADENA
-
-operandos::= INTEGER_T | FLOAT_T | IDENTIFICADOR | BOLEANO_T;//FALTA CADENA
-operandos2::= INTEGER_T | FLOAT_T | IDENTIFICADOR | BOLEANO_T;
-opReturn::= INTEGER_T | FLOAT_T | IDENTIFICADOR | BOLEANO_T; //FALTA CADENA
-
-tipoFunc::= VOID_T | INTEGER_T | FLOAT_T | CHAR_T | BOLEANO_T ; 
-
-//----------------------------------------------------------------------------
+matriz_simple ::= PIPE contenido_multiple PIPE  ;
+matriz ::= PIPE columnas matriz_simple PIPE ;
+columnas ::= columna | columnas columna;
+columna ::= matriz_simple COMA;
 
 
+/*debo de llamar en operandos array o matriz*/
+/*añadir | <paramCallfun> */
+operandos ::= L_INTEGER | L_CHAR | L_STRING | L_FLOAT | IDENTIFICADOR | boleano  | operadorUnitario | array;
+tipo ::= INTEGER_T | STRING_T | FLOAT_T | CHAR_T | BOLEANO_T;
+
+asignacion::= creacion | asignArit | creacionAsig ;
+creacion ::= tipo IDENTIFICADOR ;
+asignArit ::= IDENTIFICADOR ASIGNA operacionArit ;
+creacionAsig ::= tipo IDENTIFICADOR ASIGNA operacionArit ;
+
+
+asigCompuesta ::= IDENTIFICADOR  signoComp operacionArit; /*mejorar esta combinacion*/
+
+operacionArit ::= operandos
+            |  NEGACION_T operandos 
+            |  operacionArit signo operandos 
+            |  NEGACION_T PARENTESIS operacionArit signo operandos PARENTESIS ;
 
 
 
+exprRel_I ::= operacionArit
+            | operacionArit operadorRel operacionArit
+            | NEGACION_T PARENTESIS operacionArit operadorRel operacionArit PARENTESIS;
+
+operandoLog ::= asigCompuesta   | exprRel_I ;
+
+
+exprLog_I ::= operandoLog 
+            | exprLog_I  operadorLog operandoLog
+            | NEGACION_T PARENTESIS exprLog_I  operadorLog operandoLog PARENTESIS ;
+
+
+exprUni ::= exprLog_I FINLINEA;
 
 
 
-//----------------Signos---------------------------------------------------
-signo::= SUMA_T | RESTA_T | MULTIPLICACION_T | DIVISION_T | POTENCIA_T | MODULO_T ;
-signoComp::= MAS_IGUAL_T | MENOS_IGUAL_T | DIV_IGUAL_T | NO_IGUAL_T ;
-operandorRel::= COMPARACION_T | MAYOR_T | MENOR_T | DIFERENTE_T | MAYOR_IGUAL_T | MENOR_IGUAL_T ;
- 
+lista_read ::= OP_INSERT_T operandos
+             | lista_read OP_INSERT_T operandos ;
 
-sigUnitario::= INCREMENTO_T | DECREMENTO_T ;
-//-------------------------------------------------------------------
 
+lista_write ::= OP_EXTRACT_T operandos
+              | lista_write OP_EXTRACT_T operandos ;
+
+read ::= CIN_T lista_read ;
+
+write ::= COUT_T lista_write ;
+
+
+return_A::= RETURN_T operandos  FINLINEA | RETURN_T FINLINEA;
+
+bloque ::= expr | bloque expr ;
+
+expr ::= return_A | exprUni |  asignacion FINLINEA ;
 
 
 
