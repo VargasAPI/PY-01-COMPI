@@ -35,7 +35,7 @@ scan with {: return lex.next_token(); :}
  
 /* Terminales (tokens retornados por el scanner). */
 /*definicion de tipos*/
-terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR;
+terminal L_INTEGER, L_STRING, IDENTIFICADOR,IDENTIFICADOR2, L_FLOAT, L_CHAR;
  /*tipos*/
 terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T, VOID_T; 
 /*boleano*/
@@ -72,7 +72,8 @@ non terminal filas, fila, columnas, columna;
 non terminal asignacion, creacion, asignArit, creacionAsig, asigCompuesta, operacionArit;
 
 non terminal exprRel_I, operandoLog, exprLog_I,exprUni ;
-non terminal lista_read, lista_write, read, write, return_A;
+non terminal lista_read,doWhile_B,for_B,asignacion_FOR, if_C,lista_write, read,paramCallfun,elif_list, opt_else, control, write, return_A,elemento_write, while_B ;
+non terminal else_C, elif_C, sent, optn ;
 //produccion de inicio
 start with programa;
 
@@ -90,7 +91,7 @@ operadorLog ::= CONJUNCION_T | DISYUNCION_T;
 tipoFunc ::= INTEGER_T | VOID_T | FLOAT_T | CHAR_T | BOLEANO_T; 
 boleano ::= FALSE_T | TRUE_T;
 sigUnitario ::= INCREMENTO_T | DECREMENTO_T;
-operadorUnitario ::= L_INTEGER sigUnitario | sigUnitario L_INTEGER ;
+operadorUnitario ::= IDENTIFICADOR sigUnitario | sigUnitario IDENTIFICADOR ;
 
 
 arrays ::= creacionArray | asignArray | creacionAsigArray | array;
@@ -119,57 +120,91 @@ columna ::= matriz_simple COMA;
 
 /*debo de llamar en operandos array o matriz*/
 /*añadir | <paramCallfun> */
-operandos ::= L_INTEGER | L_CHAR | L_STRING | L_FLOAT | IDENTIFICADOR | boleano  | operadorUnitario | array;
+operandos ::= L_INTEGER | L_CHAR | L_STRING | L_FLOAT | boleano  | operadorUnitario | array  |IDENTIFICADOR| paramCallfun ;
 tipo ::= INTEGER_T | STRING_T | FLOAT_T | CHAR_T | BOLEANO_T;
 
 asignacion::= creacion | asignArit | creacionAsig ;
 creacion ::= tipo IDENTIFICADOR ;
-asignArit ::= IDENTIFICADOR ASIGNA operacionArit ;
-creacionAsig ::= tipo IDENTIFICADOR ASIGNA operacionArit ;
+asignArit ::= IDENTIFICADOR ASIGNA exprLog_I ;
+creacionAsig ::= tipo IDENTIFICADOR ASIGNA exprLog_I ;
 
+paramCallfun ::=  IDENTIFICADOR2  PARENTESIS  PARENTESIS ;
 
 asigCompuesta ::= IDENTIFICADOR  signoComp operacionArit; /*mejorar esta combinacion*/
 
 operacionArit ::= operandos
             |  NEGACION_T operandos 
             |  operacionArit signo operandos 
-            |  NEGACION_T PARENTESIS operacionArit signo operandos PARENTESIS ;
-
+            |  NEGACION_T PARENTESIS operacionArit signo operandos PARENTESIS 
+            |  PARENTESIS operacionArit signo operandos PARENTESIS ;
 
 
 exprRel_I ::= operacionArit
             | operacionArit operadorRel operacionArit
-            | NEGACION_T PARENTESIS operacionArit operadorRel operacionArit PARENTESIS;
+            | NEGACION_T PARENTESIS operacionArit operadorRel operacionArit PARENTESIS 
+            | PARENTESIS  operacionArit operadorRel operacionArit PARENTESIS ;
 
 operandoLog ::= asigCompuesta   | exprRel_I ;
 
 
 exprLog_I ::= operandoLog 
             | exprLog_I  operadorLog operandoLog
-            | NEGACION_T PARENTESIS exprLog_I  operadorLog operandoLog PARENTESIS ;
+            | NEGACION_T PARENTESIS exprLog_I  operadorLog operandoLog PARENTESIS 
+            | PARENTESIS exprLog_I  operadorLog operandoLog PARENTESIS ;
 
 
 exprUni ::= exprLog_I FINLINEA;
 
 
 
-lista_read ::= OP_INSERT_T operandos
-             | lista_read OP_INSERT_T operandos ;
 
 
-lista_write ::= OP_EXTRACT_T operandos
-              | lista_write OP_EXTRACT_T operandos ;
 
-read ::= CIN_T lista_read ;
 
-write ::= COUT_T lista_write ;
+
+
+
+lista_write ::= OP_EXTRACT_T exprLog_I
+              | lista_write OP_EXTRACT_T exprLog_I ;
+              
+write::= COUT_T lista_write FINLINEA ;
+
+
+ lista_read ::= OP_INSERT_T exprLog_I
+              | lista_read OP_INSERT_T exprLog_I ; 
+
+read ::= CIN_T lista_read  FINLINEA ;
+
+
+while_B::= WHILE_T PARENTESIS exprLog_I PARENTESIS LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T {: System.out.println("Si llega while"); :};
+
+doWhile_B::= DO_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T WHILE_T PARENTESIS exprLog_I PARENTESIS FINLINEA {: System.out.println("Si llega doWhile"); :};
+
+
+
+
+          
+else_C::= ELSE_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T {: System.out.println("Si llega else"); :};
+
+elif_C::= ELIF_T PARENTESIS exprLog_I PARENTESIS LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T {: System.out.println("Si llega elif"); :};
+
+if_C ::= IF_T PARENTESIS exprLog_I PARENTESIS LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T   {: System.out.println("If con múltiples elif y opcional else"); :};
+
+
+asignacion_FOR::= creacion | asignArit | creacionAsig | asignacion COMA asignacion ;
+
+
+for_B::= FOR_T PARENTESIS asignacion_FOR FINLINEA  {:System.out.println("Si");:}exprLog_I  FINLINEA operadorUnitario PARENTESIS LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T {: System.out.println("Si llega for"); :};
+
+optn::= if_C | elif_C | else_C ;
+
+
+control::= while_B | doWhile_B | optn | for_B ;
 
 
 return_A::= RETURN_T operandos  FINLINEA | RETURN_T FINLINEA;
 
 bloque ::= expr | bloque expr ;
 
-expr ::= return_A | exprUni |  asignacion FINLINEA ;
-
-
+expr ::= return_A  | read | write | control  | exprUni | asignacion FINLINEA ;
 

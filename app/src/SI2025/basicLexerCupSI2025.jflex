@@ -42,7 +42,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
 digito = [0-9]
 digitoNocero = [1-9]
  
-Entero = "0" | "-"? {digito} {digitoNocero}*
+Entero = "0" | "-"? {digitoNocero} {digito}*
 Flotante = ("0" \. {digito}+) | ("-"? {digitoNocero} {digito}* \. {digito}+) //3.14, -10.5, 123.456 y 0.124, 0.0, 0.1
 
 Caracter = \'(\\.|[^\\'])\'
@@ -125,6 +125,7 @@ Caracter = \'(\\.|[^\\'])\'
 <YYINITIAL> {
     /* identifiers */  
     {Identifier}                    { return symbol(sym.IDENTIFICADOR, yytext()); }
+    {Identifier}                    { return symbol(sym.IDENTIFICADOR2, yytext()); }
    
                       //return symbol: Es el id con el cual se reconoce el token que genera: ejem 25 -> lo reconoce el programa como un token llamado l-integer
     /* literals */  

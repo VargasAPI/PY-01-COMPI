@@ -1,8 +1,59 @@
  int hola = 23.5 ?
 char mivar = "ssff" ?
 /*int num = '-2' ? */
-int num2 = 2 ? 
+int num2 = 2+3*5? 
 int num1 = 'a'?
 bool verdad = Sol ?
 /*int num?*/
 int temp = arr[3][2] ?
+cout << "Texto" << variable << &x + 3& << &a > b& << &flag # active& ?
+cout << "Array: " << arr[i++] << " es " << arr[i] ?
+
+int a = 3 ?
+int b = 4 ?
+
+while &a != b& {
+   a = a + 1 ?
+
+   while &b > a& {
+      a = a + 2 ?
+      b = b - 1 ?
+      return ?
+   } 
+
+   return ?
+} 
+
+ do {
+        cout << "Ingresa un número &0 para salir&: " ?
+        cin >> numero ?
+        cout << "Ingresaste: " << numero ?
+    } while &numero != 0& ?
+
+
+
+
+if &a == 1& {
+
+   x = 34 ?
+
+}  elif &a == 2& {
+
+    cout << "Hola putyas" ?
+
+} elif &a == 3& {
+
+   x = 34 ?
+}
+
+
+
+if &nota>90&{
+   nota = 56 ?
+}
+
+for &int i = 0 , j = 10 ? i < j ? j--&{
+   cout << "i: " << i  ?
+   }
+
+  

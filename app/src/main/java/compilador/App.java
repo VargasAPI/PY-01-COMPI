@@ -59,10 +59,10 @@ public class App {
 
         // ejercicio de prueba de scanner
 
-        mfjc.ejercicioLexer(fullPathparser); // Prueba el lexer cup ajustado
+        // mfjc.ejercicioLexer(fullPathparser); // Prueba el lexer cup ajustado
         // V 2024
 
-        // mfjc.ejercicioParser(fullPathparser); //Pueba el parser de verano 2024
+        mfjc.ejercicioParser(fullPathparser); // Pueba el parser de verano 2024
 
     }
 
@@ -71,8 +71,8 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        GenerarLexerParser();
-        // PruebasLexerParser();
+        // GenerarLexerParser();
+        PruebasLexerParser();
     }
 
 }

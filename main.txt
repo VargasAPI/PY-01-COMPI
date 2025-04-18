@@ -90,7 +90,7 @@ operandoLog ::= operacionArit | exprRel_I | asigCompuesta
 
 ------------------------------dowhile-------------------------------------------
 
-<doWhile> ::= "do\" <bloque>  "/" "while" "(" <exprRelLog> ")" <endln>
+<doWhile> ::= "do\" <bloque>  "/" "while" "(" <exprRelLog> ")" 
 
 ------------------------------for--------------------
 
