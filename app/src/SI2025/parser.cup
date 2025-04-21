@@ -3,11 +3,8 @@
 package ParserLexer;
 import java_cup.runtime.*;
  
-// utiliza class BasicLexerCup que genera el lexer .jflex, pequeños cambios de lo tomado de la página de cup
-//cambios en parser code, init with y scan with {:
-// este es el cup este es el analinzador lexico
-// meter funciones en action code para la tabla de simbolos, agregar un simbolo a una tabla, generar un simbolo
-// funciones java en action code
+// RESPALDO DE PRINCIPAL
+
 action code {:
  
     public void hola(){

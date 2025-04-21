@@ -8,7 +8,8 @@ package ParserLexer;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int L_FLOAT = 6;
+  public static final int MAIN_T = 7;
+  public static final int L_FLOAT = 5;
   public static final int L_STRING = 3;
   public static final int FALSE_T = 14;
   public static final int POT_IGUAL_T = 33;
@@ -27,7 +28,7 @@ public class sym {
   public static final int CONJUNCION_T = 36;
   public static final int BOLEANO_T = 12;
   public static final int IDENTIFICADOR = 4;
-  public static final int L_CHAR = 7;
+  public static final int L_CHAR = 6;
   public static final int LLAVE_ABIERTO_T = 54;
   public static final int MAYOR_T = 26;
   public static final int ASIGNA = 30;
@@ -47,7 +48,6 @@ public class sym {
   public static final int MENOR_IGUAL_T = 25;
   public static final int PIPE = 56;
   public static final int DISYUNCION_T = 38;
-  public static final int IDENTIFICADOR2 = 5;
   public static final int WHILE_T = 43;
   public static final int CIN_T = 47;
   public static final int BREAK_T = 46;
@@ -73,9 +73,9 @@ public class sym {
   "L_INTEGER",
   "L_STRING",
   "IDENTIFICADOR",
-  "IDENTIFICADOR2",
   "L_FLOAT",
   "L_CHAR",
+  "MAIN_T",
   "INTEGER_T",
   "STRING_T",
   "CHAR_T",
