@@ -13,23 +13,22 @@ public class sym {
   public static final int L_STRING = 3;
   public static final int FALSE_T = 14;
   public static final int POT_IGUAL_T = 33;
-  public static final int CORCHETE_I = 58;
+  public static final int CORCHETE_I = 59;
   public static final int OP_EXTRACT_T = 50;
   public static final int COMPARACION_T = 22;
   public static final int DIFERENTE_T = 23;
   public static final int RESTA_T = 17;
   public static final int CHAR_T = 10;
   public static final int MAYOR_IGUAL_T = 24;
-  public static final int PARENTESIS = 53;
-  public static final int CORCHETE_D = 57;
-  public static final int LLAVE_CERRADO_T = 55;
+  public static final int CORCHETE_D = 58;
+  public static final int LLAVE_CERRADO_T = 56;
   public static final int COUT_T = 48;
   public static final int MODULO_T = 21;
   public static final int CONJUNCION_T = 36;
   public static final int BOLEANO_T = 12;
   public static final int IDENTIFICADOR = 4;
   public static final int L_CHAR = 6;
-  public static final int LLAVE_ABIERTO_T = 54;
+  public static final int LLAVE_ABIERTO_T = 55;
   public static final int MAYOR_T = 26;
   public static final int ASIGNA = 30;
   public static final int RETURN_T = 45;
@@ -46,11 +45,13 @@ public class sym {
   public static final int INTEGER_T = 8;
   public static final int COMA = 52;
   public static final int MENOR_IGUAL_T = 25;
-  public static final int PIPE = 56;
+  public static final int PIPE = 57;
   public static final int DISYUNCION_T = 38;
+  public static final int PARENTESIS_I = 53;
   public static final int WHILE_T = 43;
   public static final int CIN_T = 47;
   public static final int BREAK_T = 46;
+  public static final int PARENTESIS_D = 54;
   public static final int ELIF_T = 42;
   public static final int SUMA_T = 16;
   public static final int FLOAT_T = 11;
@@ -121,7 +122,8 @@ public class sym {
   "OP_EXTRACT_T",
   "FINLINEA",
   "COMA",
-  "PARENTESIS",
+  "PARENTESIS_I",
+  "PARENTESIS_D",
   "LLAVE_ABIERTO_T",
   "LLAVE_CERRADO_T",
   "PIPE",

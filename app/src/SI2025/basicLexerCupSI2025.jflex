@@ -119,9 +119,10 @@ Caracter = \'(\\.|[^\\'])\'
 <YYINITIAL> "cout"              { return symbol(sym.COUT_T); }
 <YYINITIAL> ">>"              { return symbol(sym.OP_INSERT_T); }
 <YYINITIAL> "<<"              { return symbol(sym.OP_EXTRACT_T); }
-<YYINITIAL> "{"             { return symbol(sym.LLAVE_ABIERTO_T); }
-<YYINITIAL> "}"              { return symbol(sym.LLAVE_CERRADO_T); }
-<YYINITIAL> "&"              { return symbol(sym.PARENTESIS); }
+<YYINITIAL> "\\"             { return symbol(sym.LLAVE_ABIERTO_T); }
+<YYINITIAL> "/"              { return symbol(sym.LLAVE_CERRADO_T); }
+<YYINITIAL> "ʃ"              { return symbol(sym.PARENTESIS_I); }
+<YYINITIAL> "ʅ"              { return symbol(sym.PARENTESIS_D); }
 <YYINITIAL> "|"              { return symbol(sym.PIPE); }
 <YYINITIAL> "["              { return symbol(sym.CORCHETE_I); }
 <YYINITIAL> "]"              { return symbol(sym.CORCHETE_D); }
