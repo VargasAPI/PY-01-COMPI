@@ -1,3 +1,65 @@
+ void fun ʃ ʅ \
+    ʃ ʃ 3+45 ʅ + ʃ  32+21 ʅ ʅ ?
+    ʃ 3+45 ʅ # Sol ?
+    int x?
+    x += 1?
+    i++?
+    int j = 1+i?
+    ||a|,|2|,|1,2,|2|||?
+    arr[1][3] ?
+    int arr[1][3] = | |a|,|2|,|1,2,|2||| ?
+    ʃ ʃ var+23 ʅ > 45 # Sol ^ otra == otraFun ʅ ?
+    algo = var+23 > 45 # Sol ^ otra == otraFun?
+    ʃ x+=1 ʅ ?
+    fun ʃ x,2,4,fun ʃ ʅ ʅ ?
+/
 
-int string 3345
-+ ? hola mundo
+void prints ʃ ʅ \
+    cout << "Texto" << variable << ʃ x + 3 ʅ << ʃ a > b ʅ << ʃ flag # active ʅ ?
+    cout << "Array: " << arr[i++] << " es " << arr[i] ?
+    for ʃ int i = 0 ? i < 10 ? j-- ʅ \
+        cout << "i: " << i  ?
+        int y ?
+        for ʃ y = 0 ? i < 10 ? j-- ʅ \
+            cin >> strin >> tipo  ?
+        /
+    /
+/
+void full ʃ ʅ \
+    while ʃ a != b ʅ  \
+        a = a + 1 ?
+
+        while ʃ b > a ʅ \
+            a = a + 2 ?
+            b = b - 1 ?
+            return ?
+        / 
+    return ?
+    /
+    do \
+        cout << "Ingresa un número ʃ 0 para salir ʅ: " ?
+        cin >> numero ?
+        cout << "Ingresaste: " << numero ?
+    / while ʃ numero != 0 ʅ ?
+    if ʃ a == 1 ʅ \
+        x = 34 ?
+    /   elif  ʃ a == 2 ʅ \
+        cout << "Hola putyas" ?
+
+    /  elif ʃ a == 3 ʅ \
+        x = 34 ?
+    /  else \
+        i++?
+    / 
+/
+{
+    hola mundo
+}
+ void main ʃ ʅ \
+    fun ʃ ʅ ?
+    prints ʃ ʅ ?
+    full ʃ ʅ ?
+    !Sol?
+    ! ʃ a<2 ʅ ?
+    ʃ ! ʃ a > 5 # b < 10 ʅ ʅ ?
+/

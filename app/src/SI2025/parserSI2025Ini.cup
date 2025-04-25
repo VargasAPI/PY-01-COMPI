@@ -42,7 +42,7 @@ scan with {: return lex.next_token(); :}
 
 /* Terminales (tokens retornados por el scanner). */
 /*definicion de tipos*/
-terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR, MAIN_T;
+terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR;
  /*tipos*/
 terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T, VOID_T; 
 /*boleano*/
@@ -69,29 +69,30 @@ terminal PIPE, CORCHETE_D, CORCHETE_I;
 // no terminales
 
 non terminal tipoFunc, tipo, signo, signoComp, operadorRel, operadorLog, boleano;
-non terminal sigUnitario, nombreFuncion,variable;
+non terminal sigUnitario;
 
-non terminal parametros,parametrosInv, invocaFunc,paramInv ,exprP;
-
-non terminal cajaArray, defArray, array,params;
-
-non terminal operandoUnitario, operandoArit, literal ,operandos,operacionArit,cambiable;
-
-non terminal asignacion, creacion, asignArit, creacionAsig, asigCompuesta,asignacionUni,asignacionGeneral;
-
+non terminal cajaArray, defArray, array;
 non terminal filas, matriz ;
 
-non terminal exprUni, crear,creaciones;
+non terminal parametros, invocaFunc ,exprP;
+
+
+non terminal literal ,operandoUnitario, operandoArit,operacionArit,exprAritNegacion;
+non terminal cambiable,creacion,asignArit,creacionAsig,asignacion,asigCompuesta,asignacionUni;
+non terminal exprArit,exprAritParentesis;
+non terminal exprUni;
 
 non terminal exprRel_I, exprRel_glob ,exprRel_par ,exprRel_neg, operandoLog, exprLog_I;
 non terminal lista_read, lista_write, write, read, return_A;
 
 non terminal for_B, while_B , doWhile_B, else_C, elif_C, if_C, optn, control;
 
-non terminal expr, bloque, programa, funcMain, main;
 
 
-non terminal inicio, decS, dec, funcFunc, func;
+non terminal expr, bloque, programa ;
+
+
+non terminal inicio, decS, dec, funcMain, params;
 //produccion de inicio
 start with programa;
 
@@ -120,10 +121,6 @@ boleano ::= FALSE_T | TRUE_T;
 /*sigUnitario ::= ++ | --*/
 sigUnitario ::= INCREMENTO_T | DECREMENTO_T;
 
-nombreFuncion ::= IDENTIFICADOR;
-variable ::= IDENTIFICADOR;
-
-
 /*
 ------------------------------------------------------
 ARRAY
@@ -133,21 +130,7 @@ ARRAY
 cajaArray ::= CORCHETE_I operandoArit CORCHETE_D ;
 defArray ::= cajaArray  
         | defArray cajaArray;
-array ::= variable defArray;
-
-/*
-------------------------------------------------------
-LLAMAR FUNCIONES AUX
-------------------------------------------------------
-*/
-
-
-parametros ::= operandoArit 
-            | parametros COMA operandoArit 
-            | /*vacio*/;
-
-
-invocaFunc ::=  IDENTIFICADOR PARENTESIS_I parametros PARENTESIS_D ;  
+array ::= IDENTIFICADOR defArray;
 
 /*
 ------------------------------------------------------
@@ -159,25 +142,25 @@ filas ::= operandoArit
         | filas COMA operandoArit;
 
 matriz ::= PIPE filas  PIPE ;
+/*
+------------------------------------------------------
+LLAMAR FUNCIONES AUX
+------------------------------------------------------
+*/
+parametros ::= operandoArit 
+            | parametros COMA operandoArit |;
+
+invocaFunc ::=  IDENTIFICADOR PARENTESIS_I parametros PARENTESIS_D ;  
 
 /*
 ------------------------------------------------------
 OPERANDOS
 ------------------------------------------------------
 */
+operandoUnitario ::= IDENTIFICADOR sigUnitario | sigUnitario IDENTIFICADOR ;
 
-operandoUnitario ::= variable sigUnitario | sigUnitario variable ;
-
-operandoArit ::= literal |  operandoUnitario | boleano | array | matriz | invocaFunc ;  
-
-
-
-operacionArit ::= operandoArit
-            |  NEGACION_T operandoArit
-            |  operacionArit signo operandoArit
-            |  PARENTESIS_I operacionArit signo operandoArit PARENTESIS_D
-            |  NEGACION_T PARENTESIS_I operacionArit signo operandoArit PARENTESIS_D;
-            
+operandoArit ::= literal | IDENTIFICADOR | invocaFunc  | exprAritParentesis 
+                | boleano | matriz | array | operandoUnitario | exprAritNegacion;
 
 /*
 ------------------------------------------------------
@@ -185,21 +168,16 @@ CREACION, ASIGNACION , CREACION-ASIGNACION (INCLUYE ARRAYS)
 ------------------------------------------------------
 */
 
-cambiable ::= variable | array;
+
+cambiable ::= IDENTIFICADOR | array;
 
 creacion ::= tipo cambiable | creacion COMA tipo cambiable | ;
 asignArit ::= cambiable ASIGNA exprP ;
 creacionAsig ::= tipo cambiable ASIGNA exprP ;
 asignacion::= creacion | asignArit | creacionAsig;
 
-//asignArit ::= cambiable ASIGNA exprP ;
-//crear ::= asignArit | cambiable;
-//creaciones ::= crear | creaciones COMA crear ;
-//creacionAsig ::= tipo creaciones | creacionAsig COMA tipo creaciones  ;
-//asignacion::= asignArit | creacionAsig;
 
-asigCompuesta ::= cambiable signoComp operacionArit
-                | PARENTESIS_I cambiable signoComp operacionArit PARENTESIS_D; 
+asigCompuesta ::= cambiable signoComp exprArit; 
 
 asignacionUni ::= asignacion  FINLINEA;
 
@@ -208,21 +186,27 @@ asignacionUni ::= asignacion  FINLINEA;
 EXPRESIONES RELACIONALES Y  LOGICAS
 ------------------------------------------------------
 */
-exprRel_I ::=  operacionArit operadorRel operacionArit ;
-exprRel_par ::= PARENTESIS_I operacionArit operadorRel operacionArit  PARENTESIS_D ;
-exprRel_neg ::= NEGACION_T PARENTESIS_I operacionArit operadorRel operacionArit  PARENTESIS_D ;
-exprRel_glob ::= exprRel_I | exprRel_par | exprRel_neg ;
 
-operandoLog ::= asigCompuesta   | exprRel_glob  | operacionArit ;
+exprArit ::= operandoArit
+            | NEGACION_T operandoArit
+            |  exprArit signo operandoArit;
+
+
+
+exprRel_I ::=  exprArit operadorRel exprArit ;
+
+operandoLog ::= asigCompuesta | exprRel_I  | exprArit  ;
 
 exprLog_I ::= operandoLog  
-            | exprLog_I  operadorLog operandoLog
-            | NEGACION_T PARENTESIS_I exprLog_I  operadorLog operandoLog PARENTESIS_D 
-            | PARENTESIS_I exprLog_I  operadorLog operandoLog PARENTESIS_D  ;
+            | exprLog_I  operadorLog operandoLog;
+
+exprAritParentesis ::=  PARENTESIS_I exprLog_I PARENTESIS_D ;
+
 
 
 exprP ::= exprLog_I;
-exprUni ::= exprP FINLINEA;
+exprUni ::= exprP FINLINEA ;
+
 
 /*
 ------------------------------------------------------
@@ -231,12 +215,12 @@ READ - WRITE - RETURN
 */
 
 lista_read ::= OP_INSERT_T exprP
-            | lista_read OP_INSERT_T exprLog_I ;
+            | lista_read OP_INSERT_T exprP ;
 
 read ::= CIN_T lista_read FINLINEA ; 
 
 lista_write ::= OP_EXTRACT_T exprP
-              | lista_write OP_EXTRACT_T exprLog_I ;
+              | lista_write OP_EXTRACT_T exprP ;
               
 write::= COUT_T lista_write FINLINEA ;
 
@@ -274,36 +258,27 @@ elif_C::= ELIF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CE
 if_C ::= IF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
 
 optn ::= if_C | elif_C | else_C ;
+
 /*
 ------------------------------------------------------
 PRINCIPAL
 ------------------------------------------------------
 */
-
-
 control::=  for_B | while_B | doWhile_B | optn ;
 
-expr ::= exprUni | read | write | return_A | control | asignacionUni ;
+expr ::= exprUni | asignacionUni | read | write | return_A | control;
 bloque ::= expr | bloque expr ;
 
 params ::= PARENTESIS_I creacion  PARENTESIS_D ;
 
-main ::= VOID_T MAIN_T params ;
-funcMain ::= main FINLINEA
-            | main LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
 
-
-func ::= tipoFunc nombreFuncion params ;
-funcFunc ::= func FINLINEA
-            | func LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
-
-
-dec ::= funcFunc ; // agregar que pude ser vacio, creo que no deja
+funcMain ::= tipoFunc IDENTIFICADOR params FINLINEA
+            | tipoFunc IDENTIFICADOR params  LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
+dec ::= funcMain ; 
 
 decS ::= dec
         | decS dec;
 
-inicio ::= decS funcMain;
-
+inicio ::= decS;
 
 programa ::= {: hola();:} inicio {: adios();:} ;

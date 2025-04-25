@@ -31,12 +31,18 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
  
-TraditionalComment   = "/" [^] ~"/" | "/" "*"+ "/"
-// Comment can be the last line of the file, without line terminator.
-EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
-DocumentationComment = "/" {CommentContent} "*"+ "/"
-CommentContent       = ( [^*] | \*+ [^/*] )*
+//TraditionalComment   = "/" [^] ~"/" | "/" "*"+ "/"
+//// Comment can be the last line of the file, without line terminator.
+//EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
+//DocumentationComment = "/" {CommentContent} "*"+ "/"
+//CommentContent       = ( [^*] | \*+ [^/*] )*
  
+TraditionalComment   = "{" [^] ~"}" 
+// Comment can be the last line of the file, without line terminator.
+EndOfLineComment     = "@" {InputCharacter}* {LineTerminator}?
+DocumentationComment = "{" {CommentContent} "*"+ "}"
+CommentContent       = ( [^*] | \*+ [^/*] )*
+
 Identifier = [:jletter:] [:jletterdigit:]*
 
 
@@ -109,7 +115,6 @@ Caracter = \'(\\.|[^\\'])\'
 <YYINITIAL> "elif"              { return symbol(sym.ELIF_T); }
 <YYINITIAL> "while"           { return symbol(sym.WHILE_T); }
 <YYINITIAL> "for"             { return symbol(sym.FOR_T); }
-<YYINITIAL> "main"             { return symbol(sym.MAIN_T); }
 
 <YYINITIAL> "?"              { return symbol(sym.FINLINEA); }
 <YYINITIAL> "return"          { return symbol(sym.RETURN_T); }
@@ -123,6 +128,8 @@ Caracter = \'(\\.|[^\\'])\'
 <YYINITIAL> "/"              { return symbol(sym.LLAVE_CERRADO_T); }
 <YYINITIAL> "ʃ"              { return symbol(sym.PARENTESIS_I); }
 <YYINITIAL> "ʅ"              { return symbol(sym.PARENTESIS_D); }
+//<YYINITIAL> "("              { return symbol(sym.PARENTESIS_I); }
+//<YYINITIAL> ")"              { return symbol(sym.PARENTESIS_D); }
 <YYINITIAL> "|"              { return symbol(sym.PIPE); }
 <YYINITIAL> "["              { return symbol(sym.CORCHETE_I); }
 <YYINITIAL> "]"              { return symbol(sym.CORCHETE_D); }
