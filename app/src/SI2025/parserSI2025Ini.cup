@@ -264,11 +264,68 @@ exprLog_I ::= operandoLog
 exprAritParentesis ::=  PARENTESIS_I exprLog_I PARENTESIS_D ;
 
 
-
 exprP ::= exprLog_I;
 exprUni ::= exprP FINLINEA ;
 
-expr ::= exprUni | asignacionUni ;
+/*
+------------------------------------------------------
+READ - WRITE - RETURN 
+------------------------------------------------------
+*/
+
+lista_read ::= OP_INSERT_T exprP
+            | lista_read OP_INSERT_T exprP ;
+
+read ::= CIN_T lista_read FINLINEA ; 
+
+lista_write ::= OP_EXTRACT_T exprP
+              | lista_write OP_EXTRACT_T exprP ;
+              
+write::= COUT_T lista_write FINLINEA ;
+
+return_A::= RETURN_T exprP  FINLINEA | RETURN_T FINLINEA;
+
+/*
+------------------------------------------------------
+FOR
+------------------------------------------------------
+*/
+
+for_B::= FOR_T PARENTESIS_I asignacionUni exprUni exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
+
+/*
+------------------------------------------------------
+DO - WHILE
+------------------------------------------------------
+*/
+
+
+while_B::= WHILE_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
+
+doWhile_B::= DO_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T WHILE_T PARENTESIS_I exprP PARENTESIS_D FINLINEA;
+
+/*
+------------------------------------------------------
+ELSE - ELIF - IF
+------------------------------------------------------
+*/
+
+else_C::= ELSE_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
+
+elif_C::= ELIF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
+
+if_C ::= IF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
+
+optn ::= if_C | elif_C | else_C ;
+
+/*
+------------------------------------------------------
+PRINCIPAL
+------------------------------------------------------
+*/
+control::=  for_B | while_B | doWhile_B | optn ;
+
+expr ::= exprUni | asignacionUni | read | write | return_A | control;
 bloque ::= expr | bloque expr ;
 
 params ::= PARENTESIS_I creacion  PARENTESIS_D ;
