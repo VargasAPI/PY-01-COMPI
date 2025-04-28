@@ -1,7 +1,8 @@
-
-
 package ParserLexer;
 import java_cup.runtime.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
  
 // utiliza class BasicLexerCup que genera el lexer .jflex, pequeños cambios de lo tomado de la página de cup
 //cambios en parser code, init with y scan with {:
@@ -9,7 +10,8 @@ import java_cup.runtime.*;
 // meter funciones en action code para la tabla de simbolos, agregar un simbolo a una tabla, generar un simbolo
 // funciones java en action code
 action code {:
-    String currentHastTable;
+    public HashMap<String, ArrayList<String>> listaTablaSimbolos = new HashMap<String, ArrayList<String>>();
+    String currentHash;
  
     public void hola(){
         System.out.println("Iniciando lectura del codigo....");
@@ -18,33 +20,119 @@ action code {:
     public void adios(){
         System.out.println("Lectura finalizada de manera exitosa");
     }
-    public void crearTabla(String funcion){
-        currentHastTable = funcion;
-        System.out.println("Tabla de simbolos para: "+funcion + "\n");    
+    public void imprimirTablaSimbolos() {
+        for (String key : listaTablaSimbolos.keySet()) {
+            System.out.println("Tabla de simbolos "+key);
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "Tipo", "Valor");
+            System.out.println("----------------------------------------");
+       
+            for (String item : listaTablaSimbolos.get(key)) {
+                int indicePrimerDosPuntos = item.indexOf(":");
+ 
+                String tipo = item.substring(0, indicePrimerDosPuntos).trim(); //agarra lo que esta antes :
+                String valor = item.substring(indicePrimerDosPuntos + 1).trim(); //agarra lo que esta despues de :
+
+                imprimirBloque(tipo);
+
+                System.out.printf("%-15s | %-20s \n", tipo, valor);
+
+            }
+            System.out.println("-----------------------------------------\n");
+        }
+    }
+    public void imprimirBloque(String tipo){
+        if (tipo.equals("inicializacion")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "FOR", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        if (tipo.equals("bloque")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "DO-WHILE", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        if (tipo.equals("W.Condicion")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "WHILE", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        if (tipo.equals("if")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "IF", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        if (tipo.equals("else")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "ELSE", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        if (tipo.equals("elif")) {
+            System.out.println("----------------------------------------");
+            System.out.printf("%-15s | %-20s \n", "ELIF", "Inicio");
+            System.out.println("----------------------------------------");
+        }
+        
 
     }
-    public void leerTipoID(String tipo, String identificador){
-        System.out.println("Tipo          |"+tipo); 
-        System.out.println("identificador |"+identificador); 
+    public void incluirFuncion(String tipo, String id){
+        String tipoTabla = "main";
+ 
+        if (id.equals("main")) {
+            tipoTabla = "main:" + tipo;
+        } else {
+            tipoTabla = "funcion:" + tipo;
+        }
+       
+        ArrayList<String> funTable = new ArrayList<>();
+        currentHash = id;
+        funTable.add(tipoTabla);
+        listaTablaSimbolos.put(currentHash, funTable);
+    }
+
+    public void incluirFor(String inicio, String condi, String actu){
+        listaTablaSimbolos.get(currentHash).add("inicializacion:" + inicio);
+        listaTablaSimbolos.get(currentHash).add("condicion:" +condi);
+        listaTablaSimbolos.get(currentHash).add("actualizacion:" + actu);
         
     }
 
-    public void leerObjeto(String mensaje, String objeto){
-        System.out.println(mensaje+"       | "+objeto);
-    }
+ 
+ 
 :}
  
 parser code {:
     BasicLexerCup lex;
+
+       /**
+    * Método al que se llama automáticamente ante algún error sintáctico.
+    **/
+    public void syntax_error(Symbol s) {
+        System.err.println("Error sintactico en la columna " + (s.right + 1) + 
+                        " linea  " + (s.left + 1) + ". No se esperaba este componente: " + 
+                        s.value + ".");
+    }
+ 
+    /**
+    * Método al que se llama automáticamente ante algún error sintáctico
+    * en el que ya no es posible una recuperación de errores.
+    **/
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
+        System.err.println("Error sintactico irrecuperable en la columna " + 
+                        (s.right + 1) + " linea " + (s.left + 1) + 
+                        ". Componente " + s.value + " no reconocido.");
+    }
    
     @SuppressWarnings("deprecation")
     public parser(BasicLexerCup lex){
         this.lex=lex;
         this.symbolFactory = new DefaultSymbolFactory();
     }
-
-
     
+    
+ 
+ 
+   
  
 :}
  
@@ -53,294 +141,441 @@ init with {: :};
 /* define how to connect to the scanner! */
 scan with {: return lex.next_token(); :}
  
-
-
+ 
+ 
 /* Terminales (tokens retornados por el scanner). */
-/*definicion de tipos*/
+//definicion de tipos/
 terminal L_INTEGER, L_STRING, IDENTIFICADOR, L_FLOAT, L_CHAR;
- /*tipos*/
-terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T, VOID_T; 
-/*boleano*/
-terminal FALSE_T, TRUE_T;   
-/*signo*/
+ //tipos/
+terminal INTEGER_T, STRING_T, CHAR_T, FLOAT_T, BOLEANO_T, VOID_T;
+//boleano/
+terminal FALSE_T, TRUE_T;  
+//signo/
 terminal SUMA_T,RESTA_T, MULTIPLICACION_T,POTENCIA_T, DIVISION_T, MODULO_T;
-/*operadores relacionales*/ 
+//operadores relacionales/
 terminal COMPARACION_T, DIFERENTE_T, MAYOR_IGUAL_T, MENOR_IGUAL_T, MAYOR_T, MENOR_T;
-/*signos de comparacion*/
+//signos de comparacion/
 terminal MAS_IGUAL_T, MENOS_IGUAL_T, ASIGNA, DIV_IGUAL_T, MOD_IGUAL_T, POT_IGUAL_T;
-/*signos unitarios*/
+//signos unitarios/
 terminal INCREMENTO_T, DECREMENTO_T;
-/*operadores logaritmicos y negacion*/
-terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T; 
-/*estructuras de control*/ 
+//operadores logaritmicos y negacion/
+terminal CONJUNCION_T, NEGACION_T, DISYUNCION_T;
+//estructuras de control/
 terminal IF_T, ELSE_T,  DO_T, ELIF_T, WHILE_T, FOR_T;
-/*sentencias de control*/
+//sentencias de control/
 terminal RETURN_T,BREAK_T, CIN_T, COUT_T;
-/*OTROS SIGNOS*/
+//OTROS SIGNOS//
 terminal OP_INSERT_T, OP_EXTRACT_T;
 terminal FINLINEA, COMA, PARENTESIS_I,PARENTESIS_D, LLAVE_ABIERTO_T, LLAVE_CERRADO_T;
 terminal PIPE, CORCHETE_D, CORCHETE_I;
-
+ 
 // no terminales
-
+ 
 non terminal tipoFunc, tipo, signo, signoComp, operadorRel, operadorLog, boleano;
 non terminal sigUnitario;
-
-non terminal cajaArray, defArray, array,corchete_d,corchete_i;
-non terminal filas, matriz,declara,coma ;
-
+ 
+non terminal cajaArray, defArray, array;
+non terminal filas, matriz ;
+ 
 non terminal parametros, invocaFunc ,exprP;
-
-
-non terminal literal ,operandoUnitario, operandoArit,operacionArit,exprAritNegacion;
-non terminal cambiable,creacion,asignArit,creacionAsig,asignacion,asigCompuesta,asignacionUni;
+ 
+ 
+non terminal literal ,operandoUnitario, operandoArit;
+non terminal cambiable,declara,creacion,asignArit,creacionAsig,asignacion,asigCompuesta,asignacionUni;
 non terminal exprArit,exprAritParentesis;
 non terminal exprUni;
+ 
+non terminal exprRel_I , operandoLog, exprLog_I;
+non terminal lista_read, lista_write, write, read, return_A,break_b;
 
-non terminal exprRel_I, exprRel_glob ,exprRel_par ,exprRel_neg, operandoLog, exprLog_I;
-non terminal lista_read, lista_write, write, read, return_A;
+non terminal elif_inicio,if_inicio;
 
-non terminal for_B, while_B , doWhile_B, else_C, elif_C, if_C, optn, control;
-
-
-
-non terminal expr, bloque, programa,decFun ;
-
-
+non terminal for_inicio,for_B, while_B,while_inicio ,do_while, doWhile_B, else_C, elif_C, if_C, optn, control,decFun;
+ 
+ 
+ 
+non terminal expr, bloque, programa ;
+ 
+ 
+ 
 non terminal inicio, decS, dec, funcMain, params;
 //produccion de inicio
 start with programa;
-
-
-
+ 
+ 
 /*
 ------------------------------------------------------
 TIPOS Y SIGNOS
 ------------------------------------------------------
 */
-literal ::=  L_INTEGER:itr {:RESULT="entero";:}  | L_CHAR:chr {:RESULT="caranter";:} 
-            | L_STRING:strg {:RESULT="cadena";:}  | L_FLOAT:flot  {:RESULT="decimal";:} ;
-
-tipoFunc ::= INTEGER_T:it {:RESULT="int";:}  | VOID_T:vd {:RESULT="void";:} 
-            | FLOAT_T:ft {:RESULT="float";:} | CHAR_T:ch {:RESULT="char";:} 
+literal ::=  L_INTEGER:itr {:RESULT="entero:"+itr;:}  
+            | L_CHAR:chr {:RESULT="caracter:"+chr;:}
+            | L_STRING:strg {:RESULT="cadena:"+strg;:}  
+            | L_FLOAT:flot  {:RESULT="decimal:"+flot;:} ;
+ 
+ 
+tipoFunc ::= INTEGER_T:it {:RESULT="int";:}  
+            | VOID_T:vd {:RESULT="void";:}
+            | FLOAT_T:ft {:RESULT="float";:}
+            | CHAR_T:ch {:RESULT="char";:}
             | BOLEANO_T:bl {:RESULT="bool";:};
-
-tipo ::= INTEGER_T:it {:RESULT="int";:} | STRING_T:str {:RESULT="string";:} 
-        | FLOAT_T:ft {:RESULT="float";:} | CHAR_T:ch {:RESULT="char";:} 
+ 
+tipo ::= INTEGER_T:it {:RESULT="int";:}
+        | STRING_T:str {:RESULT="string";:}
+        | FLOAT_T:ft {:RESULT="float";:}
+        | CHAR_T:ch {:RESULT="char";:}
         | BOLEANO_T:bl {:RESULT="bool";:};
-
-signo ::= SUMA_T:sum {:RESULT="+";:} | RESTA_T:res {:RESULT="-";:}  
-        | MULTIPLICACION_T:multi  {:RESULT="*";:} 
-        | POTENCIA_T:pot  {:RESULT="**";:} | DIVISION_T:div {:RESULT="//";:} 
+ 
+signo ::= SUMA_T:sum {:RESULT="+";:}
+        | RESTA_T:res {:RESULT="-";:}  
+        | MULTIPLICACION_T:multi  {:RESULT="*";:}
+        | POTENCIA_T:pot  {:RESULT="**";:}
+        | DIVISION_T:div {:RESULT="//";:}
         | MODULO_T:mod  {:RESULT="~";:} ;
-
-signoComp ::= MAS_IGUAL_T:masi {:RESULT="+=";:} | MENOS_IGUAL_T:mini {:RESULT="-=";:} 
+ 
+signoComp ::= MAS_IGUAL_T:masi {:RESULT="+=";:} | MENOS_IGUAL_T:mini {:RESULT="-=";:}
             |  DIV_IGUAL_T:di {:RESULT="//=";:} | MOD_IGUAL_T:modi {:RESULT="~=";:}
             | POT_IGUAL_T:pi {:RESULT="**=";:} ;
-/*operadorRel  < | > | <= | >= | != | == */
-operadorRel ::= COMPARACION_T:cmp {:RESULT="==";:} | DIFERENTE_T:dif {:RESULT="!=";:} 
-                | MAYOR_IGUAL_T:myi {:RESULT=">=";:} | MENOR_IGUAL_T:mni {:RESULT="<=";:} 
-                | MAYOR_T:my {:RESULT=">";:} | MENOR_T:mn {:RESULT="<";:};
+ 
+operadorRel ::= COMPARACION_T:cmp {:RESULT="==";:}
+            | DIFERENTE_T:dif {:RESULT="!=";:}
+            | MAYOR_IGUAL_T:myi {:RESULT=">=";:}
+            | MENOR_IGUAL_T:mni {:RESULT="<=";:}
+            | MAYOR_T:my {:RESULT=">";:}
+            | MENOR_T:mn {:RESULT="<";:};
 /*operadorLog::= ^ | # */
 operadorLog ::= CONJUNCION_T:and {:RESULT="#";:} | DISYUNCION_T:or {:RESULT="^ ";:};
 /*boleano := Sol | Luna*/
-boleano ::= FALSE_T:sol {:RESULT="Sol";:} | TRUE_T:luna {:RESULT="Luna";:};
-/*sigUnitario ::= ++ | --*/
-sigUnitario ::= INCREMENTO_T:incre {:RESULT="++";:} | DECREMENTO_T:decre  {:RESULT="--";:};
-
-
+boleano ::= FALSE_T:fa  {:RESULT="boleano:Sol";:} | TRUE_T:tr  {:RESULT="boleano:Luna";:};
+ 
+sigUnitario ::= INCREMENTO_T:incre {:RESULT="++";:}
+            | DECREMENTO_T:decre  {:RESULT="--";:};
+ 
 /*
 ------------------------------------------------------
 ARRAY
 ------------------------------------------------------
 */
-
-
-cajaArray ::= CORCHETE_I  operandoArit:opA CORCHETE_D 
-            {:RESULT="["+opA.toString()+"]";:};
-defArray ::= cajaArray:cjarr {: RESULT = cjarr.toString();:}
-        | defArray:dfarr cajaArray:cjarr {: RESULT = dfarr.toString() + cjarr.toString();:};
+ 
+cajaArray ::= CORCHETE_I  operandoArit:opA CORCHETE_D
+        {:RESULT= "[" + opA + "]" ;:};
+ 
+defArray ::= cajaArray:cjarr {: RESULT = cjarr;:}
+        | defArray:dfarr cajaArray:cjarr {: RESULT = dfarr +""+ cjarr;:}; // si quito las comillas dobles tengo que ponerle toString a ambas
+ 
 array ::= IDENTIFICADOR:id defArray:dfArray
-         {:leerObjeto("Arreglo", id.toString()+ dfArray.toString()); 
-         RESULT =id.toString()+ dfArray.toString();:} ;
-
+        {:
+         listaTablaSimbolos.get(currentHash).add("arreglo" +":"+ id.toString()+ dfArray.toString());
+         RESULT =id +""+ dfArray;
+        :} ;
+ 
 /*
 ------------------------------------------------------
 DECLARACION DE MATRIZ
 ------------------------------------------------------
-filas ::= operandoArit
-        | filas COMA operandoArit
-
-matriz ::= PIPE filas PIPE 
-        
 */
-
-
-filas ::= operandoArit:opAr {: RESULT = opAr.toString(); :}
-        | filas:fl COMA operandoArit:opAr 
-          {: RESULT = fl.toString() + "," + opAr.toString(); :} ;
-
-matriz ::= PIPE  filas:fls PIPE 
-            {:leerObjeto("Matriz", "|"+fls.toString()+ "|"); 
-            RESULT="|"+fls.toString()+"|";:};
-
+ 
+filas ::= operandoArit:opAr {: RESULT = opAr; :}
+        | filas:fl COMA operandoArit:opAr
+          {: RESULT = fl + "," + opAr; :} ;
+ 
+matriz ::= PIPE  filas:fls PIPE
+        {:
+        listaTablaSimbolos.get(currentHash).add("matriz" +":"+ "|"+fls.toString()+ "|");
+        RESULT= "|" + fls + "|" ;
+        :};
+ 
 /*
 ------------------------------------------------------
 LLAMAR FUNCIONES AUX
 ------------------------------------------------------
 */
-parametros ::= operandoArit:opAr {: RESULT = opAr.toString(); :}
-        | parametros:prm COMA operandoArit:opAr 
-          {: RESULT = prm.toString() + "," + opAr.toString(); :} ;
-
-invocaFunc ::= IDENTIFICADOR:id PARENTESIS_I parametros:param PARENTESIS_D 
-            {:leerObjeto("Llamada funcion", id.toString()+ "["+ param.toString()+"]"); 
-            RESULT=id.toString()+ "["+ param.toString()+"]";:};
+parametros ::= operandoArit:opAr {: RESULT = opAr; :}
+        | parametros:prm COMA operandoArit:opAr
+          {: RESULT = prm + "," + opAr; :} 
+        | {: RESULT = "null"; :} ;
+ 
+invocaFunc ::= IDENTIFICADOR:id PARENTESIS_I parametros:param PARENTESIS_D
+        {:
+        listaTablaSimbolos.get(currentHash).add("llamada funcion" +":"+ id.toString()+ "ʃ"+ param.toString()+"ʅ");
+        RESULT=id+ "ʃ"+ param + "ʅ";:};
 /*
 ------------------------------------------------------
 OPERANDOS
 ------------------------------------------------------
 */
-operandoUnitario ::= IDENTIFICADOR:id sigUnitario:sigU 
-                {:leerObjeto("Operador Unitario", id.toString()+ sigU.toString()); 
-                RESULT=id.toString()+ sigU.toString();:}
-                | sigUnitario:sigU IDENTIFICADOR:id 
-                {:leerObjeto("Operador Unitario", sigU.toString()+id.toString()); 
-                RESULT=sigU.toString()+id.toString();:};
-
-
-operandoArit ::= literal:lit {:leerObjeto("Literal",lit.toString());  RESULT = lit.toString();:} 
-                | IDENTIFICADOR:id {:leerObjeto("ID",id.toString()); RESULT = id.toString();:} 
-                | invocaFunc:invFun {: RESULT = invFun.toString();:}
-                | exprAritParentesis
-                | boleano:bol {:leerObjeto("Boleano",bol.toString());  RESULT = bol.toString();:} 
-                | array:arr {: RESULT = arr.toString();:}
-                | matriz:mt {: RESULT = mt.toString();:}
-                | operandoUnitario:opU  {: RESULT = opU.toString();:}
-                | exprAritNegacion;
-
+operandoUnitario ::= IDENTIFICADOR:id sigUnitario:sigUni
+                {:
+                    if (sigUni.equals("++")) {
+                        RESULT = "incremento:" + id+sigUni;
+                    } else {
+                        RESULT = "decremento:" + id+sigUni;
+                    }
+                   
+                :}
+                | sigUnitario:sigUni IDENTIFICADOR:id
+                {:
+               
+                    if (sigUni.equals("++")) {
+                        RESULT = "incremento:" + sigUni+id;
+                    } else {
+                        RESULT = "decremento:" + sigUni+id;
+                    }
+                   
+               
+                :};
+ 
+operandoArit ::= literal:lit
+                {: listaTablaSimbolos.get(currentHash).add(lit.toString()); RESULT = lit;:}
+                | IDENTIFICADOR:id  
+                {:listaTablaSimbolos.get(currentHash).add("id" +":"+ id.toString()); RESULT = id;:}
+                | invocaFunc:aux
+                {: RESULT = aux;:}
+                | exprAritParentesis:expar {: RESULT = expar; :}
+                | boleano:bol
+                {:listaTablaSimbolos.get(currentHash).add(bol.toString());RESULT = bol;  :}
+                | matriz:mt {: RESULT = mt;:}
+                | array:arr {: RESULT = arr;:}
+                | operandoUnitario:opUni
+                {:listaTablaSimbolos.get(currentHash).add(opUni.toString()); RESULT = opUni;:};
+ 
 /*
 ------------------------------------------------------
 CREACION, ASIGNACION , CREACION-ASIGNACION (INCLUYE ARRAYS)
 ------------------------------------------------------
-idea borrar array:arr linea 209
 */
-
-
-cambiable ::= IDENTIFICADOR:id {:RESULT = id.toString();:} | array;
-
-creacion ::= tipo:tp cambiable:camb {:leerTipoID(tp.toString(),camb.toString());:}
-            | creacion COMA tipo:tp cambiable:camb {:leerTipoID(tp.toString(),camb.toString());:}
+ 
+ 
+cambiable ::= IDENTIFICADOR:id{:RESULT=id.toString();:}  | array:arr {: RESULT = arr;:};
+ 
+creacion ::= declara:dc {: RESULT = dc; :}
+            | creacion:cc COMA declara:dc {: RESULT = cc.toString()+"," + dc.toString(); :}
             | ;
-asignArit ::= cambiable ASIGNA exprP ;
-declara ::= tipo:tp cambiable:camb {:leerTipoID(tp.toString(),camb.toString());:};
-creacionAsig ::= declara ASIGNA exprP ;
-asignacion::= creacion | asignArit | creacionAsig;
+ 
+declara ::= tipo:tipoVar cambiable:idVar
+            {:listaTablaSimbolos.get(currentHash).add(tipoVar.toString() +":"+ idVar.toString());
+            RESULT = tipoVar.toString() +":"+idVar.toString();:};
 
+ 
+asignArit ::= cambiable:cambi ASIGNA exprP:expr
+            {:listaTablaSimbolos.get(currentHash).add("id" +":"+ cambi.toString());
+            RESULT = cambi.toString() +":"+ expr.toString();:};
+ 
+creacionAsig ::= declara:dc ASIGNA exprP:expr {:RESULT = dc.toString()+"="+expr.toString();:};
+asignacion::= creacion:cra {: RESULT = cra; :}
+            | asignArit:asa {: RESULT = asa; :}
+            | creacionAsig:cras {: RESULT = cras; :};
+ 
 
-asigCompuesta ::= cambiable signoComp:sig {:leerObjeto("Operador compuesto",sig.toString());:} exprArit; 
+asigCompuesta ::= exprArit:e1 signoComp:sigc exprArit:e2
+            {: 
+                listaTablaSimbolos.get(currentHash).add("op compuesto" +":"+ sigc.toString());
+                RESULT = e1.toString() + sigc.toString() + e2.toString(); 
+            :};
+ 
 
-asignacionUni ::= asignacion  FINLINEA;
-
+asignacionUni ::= asignacion:asig  FINLINEA {: RESULT = asig; :};
+ 
 /*
 ------------------------------------------------------
 EXPRESIONES RELACIONALES Y  LOGICAS
 ------------------------------------------------------
 */
+ 
+exprArit ::= operandoArit:oa {: RESULT = oa; :}
+            | NEGACION_T operandoArit:oa {: RESULT = "!" + oa; :}
+            |exprArit:ea signo:sg operandoArit:oa
+            {:
+                listaTablaSimbolos.get(currentHash).add("op artimetico" +":"+ sg.toString());
+                RESULT = ea.toString() + sg.toString() + oa.toString();
+            :};
+ 
+exprRel_I ::= exprArit:e1 operadorRel:op exprArit:e2
+            {: 
+                listaTablaSimbolos.get(currentHash).add("op relacional" +":"+ op.toString());
+                RESULT = e1.toString() + op.toString() + e2.toString(); 
+            :};
 
-exprArit ::= operandoArit:opArt 
-            | NEGACION_T operandoArit
-            |  exprArit signo:sig {:leerObjeto("Operador Aritmetico",sig.toString());:} operandoArit;
+operandoLog ::= asigCompuesta:ac {: RESULT = ac; :}
+            | exprRel_I:er {: RESULT = er; :}
+            | exprArit:ea {: RESULT = ea; :};
+ 
+exprLog_I ::= operandoLog:ol {: RESULT = ol; :}
+            | exprLog_I:el operadorLog:op operandoLog:ol
+            {: 
+                listaTablaSimbolos.get(currentHash).add("op logatimico" +":"+ op.toString());
+                RESULT = el.toString() + op.toString() + ol.toString();
+            :};
 
+exprP ::= exprLog_I:el {: RESULT = el; :};
+ 
+exprAritParentesis ::=  PARENTESIS_I exprLog_I:exprL PARENTESIS_D {: RESULT = exprL; :};
 
-
-exprRel_I ::=  exprArit operadorRel:sig {:leerObjeto("Operador relacional",sig.toString());:} exprArit ;
-
-operandoLog ::= asigCompuesta | exprRel_I  | exprArit  ;
-
-exprLog_I ::= operandoLog  
-            | exprLog_I  operadorLog:opl {:leerObjeto("Operador logaritmico",opl.toString());:} operandoLog;
-
-exprAritParentesis ::=  PARENTESIS_I exprLog_I PARENTESIS_D ;
-
-
-exprP ::= exprLog_I;
-exprUni ::= exprP FINLINEA ;
-
+exprUni ::= exprP:expU FINLINEA {: RESULT = expU; :};
+ 
+ 
 /*
 ------------------------------------------------------
-READ - WRITE - RETURN 
+READ - WRITE - RETURN
 ------------------------------------------------------
 */
+ 
+lista_read ::= OP_INSERT_T exprP:expr_P {:RESULT = ">>" + expr_P;:}
+            | lista_read:lr OP_INSERT_T exprP:expr_P
+            {:RESULT = lr + ">>" + expr_P;:};
+ 
+read ::= CIN_T lista_read:lr FINLINEA
+        {:
+            listaTablaSimbolos.get(currentHash).add("lectura" + ":" + "cin" + lr.toString()); 
+            RESULT = "cin" + lr;
+        :};
 
-lista_read ::= OP_INSERT_T exprP
-            | lista_read OP_INSERT_T exprP ;
+lista_write ::= OP_EXTRACT_T exprP:expr_P {:RESULT = "<<" + expr_P;:}
+            | lista_write:lw OP_EXTRACT_T exprP:expr_P
+            {:RESULT = lw + "<<" + expr_P;:};
 
-read ::= CIN_T lista_read FINLINEA ; 
-
-lista_write ::= OP_EXTRACT_T exprP
-              | lista_write OP_EXTRACT_T exprP ;
-              
-write::= COUT_T lista_write FINLINEA ;
-
-return_A::= RETURN_T exprP  FINLINEA | RETURN_T FINLINEA;
+ 
+write ::= COUT_T lista_write:lw FINLINEA
+        {:
+            listaTablaSimbolos.get(currentHash).add("escritura" + ":" + "cout" + lw.toString()); 
+            RESULT = "cout" + lw;
+        :};
+ 
+ 
+return_A ::= RETURN_T exprP:e FINLINEA
+        {: 
+            listaTablaSimbolos.get(currentHash).add("return:" + e.toString());
+            RESULT = "return " + e.toString(); 
+        :}
+        | RETURN_T FINLINEA
+        {: listaTablaSimbolos.get(currentHash).add("return:empty"); RESULT = "return"; :};
+ 
+break_b::= BREAK_T FINLINEA
+        {: listaTablaSimbolos.get(currentHash).add("break:empty"); RESULT = "break"; :};
 
 /*
 ------------------------------------------------------
 FOR
 ------------------------------------------------------
 */
+for_inicio ::= FOR_T PARENTESIS_I asignacionUni:asigU exprUni:expU exprP:exp PARENTESIS_D
+        {: 
+            incluirFor(asigU.toString(),expU.toString(),exp.toString());
+            
+            RESULT = asigU.toString() + expU.toString()+ exp.toString(); 
+        :};
 
-for_B::= FOR_T PARENTESIS_I asignacionUni exprUni exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
+for_B::= for_inicio:for_i LLAVE_ABIERTO_T bloque:bl LLAVE_CERRADO_T
+        {: 
 
+            RESULT = for_i.toString() + bl.toString(); 
+        :}; 
 /*
 ------------------------------------------------------
 DO - WHILE
 ------------------------------------------------------
 */
+ 
+ 
+while_inicio::= WHILE_T PARENTESIS_I exprP:cond PARENTESIS_D
+    {:  
+        listaTablaSimbolos.get(currentHash).add("W.Condicion" + ":"+ cond.toString());
+        RESULT = cond;
+    :};
+ 
+while_B ::= while_inicio:wi LLAVE_ABIERTO_T bloque:bi LLAVE_CERRADO_T
+        {: 
+        RESULT = wi.toString() + bi.toString(); 
+        :};  
 
-
-while_B::= WHILE_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
-
-doWhile_B::= DO_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T WHILE_T PARENTESIS_I exprP PARENTESIS_D FINLINEA;
-
+do_while::= DO_T LLAVE_ABIERTO_T bloque:bl LLAVE_CERRADO_T WHILE_T
+         {: 
+            listaTablaSimbolos.get(currentHash).add("bloque:" +bl);
+            RESULT = bl.toString(); 
+        :};
+ 
+doWhile_B::= do_while PARENTESIS_I exprP:exp PARENTESIS_D FINLINEA
+        {: 
+            listaTablaSimbolos.get(currentHash).add("condicion:" +exp);
+            RESULT = exp.toString(); 
+        :};
+        
+ 
 /*
 ------------------------------------------------------
 ELSE - ELIF - IF
 ------------------------------------------------------
 */
-
-else_C::= ELSE_T LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
-
-elif_C::= ELIF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T ;
-
-if_C ::= IF_T PARENTESIS_I exprP PARENTESIS_D LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
-
-optn ::= if_C | elif_C | else_C ;
-
+ 
+else_C ::= ELSE_T LLAVE_ABIERTO_T bloque:cuerpo LLAVE_CERRADO_T
+    {:
+        listaTablaSimbolos.get(currentHash).add("else:"+cuerpo.toString());
+        RESULT = cuerpo;
+    :};
+ 
+elif_inicio ::= ELIF_T PARENTESIS_I exprP:condIf PARENTESIS_D
+    {:
+        listaTablaSimbolos.get(currentHash).add("elif" +":"+ condIf.toString());
+        RESULT = condIf ;
+    :};
+ 
+elif_C ::= elif_inicio:eli LLAVE_ABIERTO_T bloque:cuerpo LLAVE_CERRADO_T
+    {: 
+        RESULT = eli.toString() + cuerpo.toString(); 
+    :};  
+ 
+if_inicio::= IF_T PARENTESIS_I exprP:condIf PARENTESIS_D
+    {:
+        listaTablaSimbolos.get(currentHash).add("if" +":"+ condIf.toString());
+        RESULT = condIf ;
+    :};
+ 
+if_C ::= if_inicio:id_i LLAVE_ABIERTO_T bloque:cuerpo LLAVE_CERRADO_T
+    {: 
+        RESULT = id_i.toString() + cuerpo.toString(); 
+    :};  
+  
+optn ::= if_C:ifif {: RESULT = ifif; :} 
+        | elif_C:elifc {: RESULT = elifc; :} 
+        | else_C:elsec {: RESULT = elsec; :}  ;
+ 
 /*
 ------------------------------------------------------
 PRINCIPAL
 ------------------------------------------------------
 */
-control::=  for_B | while_B | doWhile_B | optn ;
-
-expr ::= exprUni | asignacionUni | read | write | return_A | control;
-bloque ::= expr | bloque expr ;
-
+control::=  for_B:for_b {: RESULT = for_b; :} 
+            | while_B:w {: RESULT = w; :}
+            | doWhile_B:dw {: RESULT = dw; :}
+            | optn:otn {: RESULT = otn; :} ;
+ 
+expr ::= exprUni:eu {: RESULT = eu; :}
+        | asignacionUni:au {: RESULT = au; :}
+        | read:rd {: RESULT = rd; :}
+        | write:wt {: RESULT = wt; :}
+        | return_A:rt {: RESULT = rt; :}
+        | break_b:rt {: RESULT = rt; :}
+        | control:ct {: RESULT = ct; :}
+        /*| error:err FINLINEA {: RESULT = err; :}
+        | error:err PARENTESIS_D {: RESULT = err; :}*/;
+ 
+ 
+bloque ::= expr:exp {: RESULT = exp; :}
+        | bloque:blq expr:exp {: RESULT = blq.toString() + exp.toString(); :} ;
+ 
 params ::= PARENTESIS_I creacion  PARENTESIS_D ;
-
-decFun ::= tipoFunc IDENTIFICADOR:id  {: crearTabla(id.toString()); RESULT = id.toString();:};
-funcMain ::= decFun:idF params FINLINEA
-            | decFun:idF params  LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T
-            {: RESULT = idF.toString();:};
-
-dec ::= funcMain:deffun 
-        {: System.out.println("\nFin de la tala de simbolos "+deffun.toString() + "\n"); :} ; 
-
+ 
+decFun ::= tipoFunc:tFunc IDENTIFICADOR:id  
+    {: incluirFuncion(tFunc.toString(),id.toString()); :};
+ 
+ 
+funcMain ::= decFun params FINLINEA
+            | decFun params  LLAVE_ABIERTO_T bloque LLAVE_CERRADO_T;
+dec ::= funcMain ;
+ 
 decS ::= dec
         | decS dec;
-
-inicio ::= decS;
-
+ 
+inicio ::= decS {:imprimirTablaSimbolos();:};
+ 
 programa ::= {: hola();:} inicio {: adios();:} ;

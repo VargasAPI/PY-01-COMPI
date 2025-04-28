@@ -1,5 +1,5 @@
-//RESPALDO
 
+//CODIGO SIN LAS PRODUCCION PARA HACER LA TABLA DE SIMBOLOS
 package ParserLexer;
 import java_cup.runtime.*;
  
@@ -282,3 +282,4 @@ decS ::= dec
 inicio ::= decS;
 
 programa ::= {: hola();:} inicio {: adios();:} ;
+
