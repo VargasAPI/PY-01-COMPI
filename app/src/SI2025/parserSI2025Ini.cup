@@ -556,8 +556,8 @@ expr ::= exprUni:eu {: RESULT = eu; :}
         | return_A:rt {: RESULT = rt; :}
         | break_b:rt {: RESULT = rt; :}
         | control:ct {: RESULT = ct; :}
-        /*| error:err FINLINEA {: RESULT = err; :}
-        | error:err PARENTESIS_D {: RESULT = err; :}*/;
+        | error:err FINLINEA {: RESULT =  "Error de sintaxis en expr antes de FINLINEA\n"; :}
+        | error:err PARENTESIS_D {: RESULT = "Error de sintaxis en expr antes de FINLINEA\n"; :};
  
  
 bloque ::= expr:exp {: RESULT = exp; :}
